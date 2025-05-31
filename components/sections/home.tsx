@@ -106,7 +106,7 @@ export function Home() {
               playfair.className
             )}
           >
-            Javier Reyes
+            Omar Somoza
           </h1>
 
           {/* Línea decorativa */}
@@ -128,7 +128,7 @@ export function Home() {
                 : "text-base md:text-xl max-w-xl"
             )}
           >
-            Architect & Publicist Turned Full Stack Developer
+            Project Manager & Producto Owner
           </p>
         </motion.div>
 
@@ -142,8 +142,11 @@ export function Home() {
                 : "text-sm md:text-base max-w-xl"
             )}
           >
-            Creo experiencias digitales donde el diseño y la tecnología se
-            entienden sin esfuerzo.
+            Hago que las ideas se conviertan en aplicaciones digitales, de
+            manera sencilla, escalable e intuitiva. Introducción sutil: Gestiono
+            proyectos de desarrollo de software enfocados en la simplicidad,
+            rapidez y escalabilidad. Mi objetivo es hacer que las cosas
+            funcionen tan bien que ni siquiera notes el esfuerzo detrás.
           </h2>
         </motion.div>
 

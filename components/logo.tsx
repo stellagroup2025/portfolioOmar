@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Image from "next/image"
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface LogoProps {
-  onClick?: () => void
+  onClick?: () => void;
 }
 
 export function Logo({ onClick }: LogoProps) {
   const handleClick = () => {
     if (onClick) {
-      onClick()
+      onClick();
     }
-  }
+  };
 
   return (
     <motion.button
@@ -22,8 +22,8 @@ export function Logo({ onClick }: LogoProps) {
       whileTap={{ scale: 0.95 }}
     >
       <Image
-        src="/images/jr-logo.png"
-        alt="JR Logo"
+        src="/images/omar-logo.png"
+        alt="OS Logo"
         width={60}
         height={60}
         className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain filter invert brightness-0 contrast-100"
@@ -34,5 +34,5 @@ export function Logo({ onClick }: LogoProps) {
         }}
       />
     </motion.button>
-  )
+  );
 }

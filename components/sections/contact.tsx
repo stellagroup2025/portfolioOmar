@@ -56,10 +56,10 @@ export function Contact() {
   };
 
   const socialLinks = [
-    { name: "LinkedIn", url: "https://linkedin.com/in/javierreyes" },
-    { name: "Dribbble", url: "https://dribbble.com/javierreyes" },
-    { name: "Twitter", url: "https://twitter.com/javierreyes" },
-    { name: "GitHub", url: "https://github.com/javierreyes" },
+    { name: "LinkedIn", url: "https://linkedin.com/in/omarsomoza" },
+    { name: "Dribbble", url: "https://dribbble.com/omarsomoza" },
+    { name: "Twitter", url: "https://twitter.com/omarsomoza" },
+    { name: "GitHub", url: "https://github.com/omarsomoza" },
   ];
 
   const fadeIn = {
@@ -234,13 +234,13 @@ export function Contact() {
               Email:
             </p>
             <a
-              href="mailto:hello@javierreyes.com"
+              href="mailto:hello@omarsomoza.com"
               className={cn(
                 "text-xl sm:text-2xl font-light text-black hover:text-black/80 transition-colors tracking-wide",
                 cormorant.className
               )}
             >
-              hello@javierreyes.com
+              contacto@omarsomoza.es
             </a>
           </div>
 
