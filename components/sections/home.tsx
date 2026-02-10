@@ -74,31 +74,45 @@ export function Home() {
 
         <motion.h1
           className={cn(
-            "font-light tracking-tight leading-[0.98] text-black mb-16", // Slightly tighter leading (1.1 -> 0.98)
-            isMobile ? "text-[2.25rem]" : "text-[3.25rem] md:text-[4rem] lg:text-[4.2rem]",
+            "font-light tracking-tight text-black mb-0 md:mb-16",
+            isMobile ? "text-[2.5rem] leading-[1.15]" : "text-[3.25rem] md:text-[4rem] lg:text-[4.2rem] leading-[0.98]",
             playfair.className
           )}
           variants={item}
         >
-          Cuando las ideas encuentran <br />
-          forma, <br />
-          <span className="opacity-90">el crecimiento es natural.</span>
+          {isMobile ? (
+            // Mobile: Natural flow, no forced breaks that might isolate weirdly
+            <>
+              Cuando las ideas<br /> encuentran forma,<br />
+              <span className="opacity-90 mt-4 block">el crecimiento es natural.</span>
+            </>
+          ) : (
+            // Desktop: Editorial pause structure
+            <>
+              Cuando las ideas encuentran <br />
+              forma, <br />
+              <span className="opacity-90">el crecimiento es natural.</span>
+            </>
+          )}
         </motion.h1>
 
         <motion.div
-          className="flex flex-col gap-12 items-start max-w-4xl"
+          className={cn(
+            "flex flex-col gap-12 items-start max-w-4xl",
+            isMobile && "mt-[35vh]" // Push content down on mobile (Below fold)
+          )}
           variants={item}
         >
           {/* The Formula: Idea ↔ Forma + Tiempo = Crecimiento (Increased weight/contrast) */}
           <div className="space-y-2">
             <h2 className={cn(
-              "text-xl md:text-3xl text-black/85 font-normal leading-relaxed tracking-wide", // Increased weight & contrast
+              "text-xl md:text-3xl text-black/85 font-normal leading-relaxed tracking-wide",
               spaceMono.className
             )}>
               <span className="opacity-60">Idea</span> <span className="mx-2 opacity-90">↔</span> <span className="opacity-100">Forma</span>
-              <span className="mx-4 opacity-50">+</span>
+              <span className="mx-2 md:mx-4 opacity-50">+</span>
               <span className="opacity-70">Tiempo</span>
-              <span className="mx-4 opacity-50">=</span>
+              <span className="mx-2 md:mx-4 opacity-50">=</span>
               <span className="border-b border-black/30 pb-1">Crecimiento</span>
             </h2>
           </div>
@@ -106,10 +120,10 @@ export function Home() {
           {/* Micro-copy: Strategy Technical Triangle - High Contrast & Bold (Kept as requested) */}
           <div className="py-2 inline-block">
             <p className={cn(
-              "text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-black/40",
+              "text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-black/60", // Increased contrast for mobile
               spaceMono.className
             )}>
-              Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo de Producto
+              Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo
             </p>
           </div>
 

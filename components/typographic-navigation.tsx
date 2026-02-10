@@ -20,6 +20,7 @@ interface NavigationProps {
 
 export function TypographicNavigation({ activeSection, setActiveSection, isTransitioning, isMobile }: NavigationProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
     { id: "approach", label: "Thinking" },
@@ -45,43 +46,68 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
     visible: { opacity: 1, x: 0 },
   }
 
-  const mobileItemVariants = {
-    hidden: { opacity: 0, x: 30 },
-    visible: { opacity: 1, x: 0 },
+  const mobileMenuVariants = {
+    closed: {
+      opacity: 0,
+      pointerEvents: "none" as const,
+      transition: { duration: 0.3 }
+    },
+    open: {
+      opacity: 1,
+      pointerEvents: "auto" as const,
+      transition: { duration: 0.4 }
+    }
   }
 
-  // Si estamos en la página de inicio, mostramos la navegación con un estilo específico
+  // Si estamos en la página de inicio, mostramos la navegación
   if (activeSection === "home") {
     if (isMobile) {
-      // Mobile Layout - kept mostly same but lighter
+      // Mobile Layout: Hidden Menu with Overlay
       return (
-        <motion.div
-          className="absolute top-0 right-0 w-full h-full flex items-start justify-center pointer-events-none pt-24"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <div className="flex flex-col items-center justify-start space-y-8 px-8 w-full max-w-sm">
-            {navItems.map((item) => (
-              <motion.div key={item.id} variants={mobileItemVariants} className="w-full">
+        <>
+          {/* Mobile Menu Toggle Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="fixed top-6 right-6 z-50 p-2 text-black mix-blend-difference focus:outline-none"
+            aria-label="Toggle Menu"
+          >
+            <span className={cn(
+              "block text-sm font-bold tracking-widest uppercase",
+              playfair.className
+            )}>
+              {isOpen ? "Close" : "Menu"}
+            </span>
+          </button>
+
+          {/* Mobile Overlay */}
+          <motion.div
+            className="fixed inset-0 z-40 bg-[#faf9f6]/95 backdrop-blur-md flex flex-col items-center justify-center"
+            variants={mobileMenuVariants}
+            initial="closed"
+            animate={isOpen ? "open" : "closed"}
+          >
+            <div className="flex flex-col items-center justify-center space-y-10">
+              {navItems.map((item) => (
                 <motion.button
-                  onClick={() => !isTransitioning && setActiveSection(item.id)}
+                  key={item.id}
+                  onClick={() => {
+                    if (!isTransitioning) {
+                      setActiveSection(item.id);
+                      setIsOpen(false);
+                    }
+                  }}
                   className={cn(
-                    "text-4xl xs:text-5xl sm:text-6xl font-black tracking-wide pointer-events-auto relative italic text-center w-full text-black/80", // Reduced opacity
+                    "text-5xl font-black tracking-wide pointer-events-auto italic text-black",
                     playfair.className,
                   )}
                   whileTap={{ scale: 0.95 }}
-                  whileHover={{ scale: 1.02, color: "#000000" }}
-                  disabled={isTransitioning}
                 >
-                  <span className="inline-block relative">
-                    {item.label}
-                  </span>
+                  {item.label}
                 </motion.button>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </>
       )
     } else {
       // Desktop Layout - Significantly reduced weight and dominance
@@ -100,7 +126,7 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
                 variants={itemVariants}
                 style={{
                   right: "5%", // Moved slightly more to the right
-                  top: `${15 + index * 14}%`, // Added more spacing, reduced total height usage
+                  top: `${15 + index * 14}%`, // Added more spacing
                 }}
               >
                 <motion.button
