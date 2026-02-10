@@ -32,7 +32,8 @@ export function OrganicOrderBackground() {
         const rows = Math.ceil(height / gridSize);
 
         // Particles
-        const particleCount = 120;
+        const isSmallScreen = width < 768;
+        const particleCount = isSmallScreen ? 50 : 120; // Reduced count for mobile
         const particles: {
             x: number;
             y: number;

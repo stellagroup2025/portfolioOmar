@@ -42,7 +42,7 @@ export function SocialLinks() {
             key={index}
             href={link.href}
             aria-label={link.label}
-            className="p-3 rounded-full bg-background/80 backdrop-blur-sm border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="p-3 rounded-full bg-background/80 backdrop-blur-sm border border-border text-foreground/70 hover:bg-accent hover:text-accent-foreground transition-colors"
             variants={item}
             whileHover={{ scale: 1.1, y: -5 }}
             whileTap={{ scale: 0.9 }}
