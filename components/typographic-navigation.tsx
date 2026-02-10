@@ -22,8 +22,8 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   const navItems = [
+    { id: "approach", label: "Thinking" },
     { id: "work", label: "Work" },
-    { id: "services", label: "Services" },
     { id: "about", label: "About" },
     { id: "contact", label: "Contact" },
   ]
@@ -53,7 +53,7 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
   // Si estamos en la página de inicio, mostramos la navegación con un estilo específico
   if (activeSection === "home") {
     if (isMobile) {
-      // Layout móvil: navegación centrada en toda la pantalla para pantallas pequeñas
+      // Mobile Layout - kept mostly same but lighter
       return (
         <motion.div
           className="absolute top-0 right-0 w-full h-full flex items-start justify-center pointer-events-none pt-24"
@@ -62,42 +62,21 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
           animate="visible"
         >
           <div className="flex flex-col items-center justify-start space-y-8 px-8 w-full max-w-sm">
-            {navItems.map((item, index) => (
+            {navItems.map((item) => (
               <motion.div key={item.id} variants={mobileItemVariants} className="w-full">
                 <motion.button
                   onClick={() => !isTransitioning && setActiveSection(item.id)}
-                  onTouchStart={() => setHoveredItem(item.id)}
-                  onTouchEnd={() => setHoveredItem(null)}
                   className={cn(
-                    "text-4xl xs:text-5xl sm:text-6xl font-black tracking-wide pointer-events-auto relative italic text-center w-full",
+                    "text-4xl xs:text-5xl sm:text-6xl font-black tracking-wide pointer-events-auto relative italic text-center w-full text-black/80", // Reduced opacity
                     playfair.className,
                   )}
                   whileTap={{ scale: 0.95 }}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, color: "#000000" }}
                   disabled={isTransitioning}
                 >
-                  <motion.span
-                    className="inline-block relative"
-                    initial={{ color: "#000000" }}
-                    animate={{
-                      color: hoveredItem === item.id ? "#6b5b73" : "#000000",
-                    }}
-                    transition={{
-                      duration: 0.3,
-                      ease: "easeInOut",
-                    }}
-                  >
+                  <span className="inline-block relative">
                     {item.label}
-                  </motion.span>
-                  <motion.div
-                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[#6b5b73]"
-                    initial={{ width: 0 }}
-                    animate={{ width: hoveredItem === item.id ? "80%" : 0 }}
-                    transition={{
-                      duration: 0.3,
-                      ease: "easeInOut",
-                    }}
-                  />
+                  </span>
                 </motion.button>
               </motion.div>
             ))}
@@ -105,7 +84,7 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
         </motion.div>
       )
     } else {
-      // Layout escritorio: navegación en la derecha como antes
+      // Desktop Layout - Significantly reduced weight and dominance
       return (
         <motion.div
           className="absolute top-0 right-0 w-full h-full flex items-center justify-center pointer-events-none"
@@ -120,8 +99,8 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
                 className="absolute"
                 variants={itemVariants}
                 style={{
-                  right: "8%",
-                  top: `${10 + index * 18}%`,
+                  right: "5%", // Moved slightly more to the right
+                  top: `${15 + index * 14}%`, // Added more spacing, reduced total height usage
                 }}
               >
                 <motion.button
@@ -129,34 +108,17 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
                   onMouseEnter={() => setHoveredItem(item.id)}
                   onMouseLeave={() => setHoveredItem(null)}
                   className={cn(
-                    "text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-black tracking-wide pointer-events-auto relative italic",
+                    // Drastically reduced size and opacity for "Texture" feel
+                    "text-4xl md:text-5xl lg:text-6xl xl:text-[5rem] font-bold tracking-wide pointer-events-auto relative italic transition-all duration-500",
+                    hoveredItem === item.id ? "text-black opacity-100 scale-105" : "text-black/5 hover:text-black/20", // Very low opacity (5%)
                     playfair.className,
                   )}
-                  whileHover={{ x: 20, scale: 1.02 }}
+                  whileHover={{ x: -10 }}
                   disabled={isTransitioning}
                 >
-                  <motion.span
-                    className="inline-block relative"
-                    initial={{ color: "#000000" }}
-                    animate={{
-                      color: hoveredItem === item.id ? "#6b5b73" : "#000000",
-                    }}
-                    transition={{
-                      duration: 0.3,
-                      ease: "easeInOut",
-                    }}
-                  >
+                  <motion.span className="inline-block relative">
                     {item.label}
                   </motion.span>
-                  <motion.div
-                    className="absolute bottom-0 left-0 h-1 bg-[#6b5b73]"
-                    initial={{ width: 0 }}
-                    animate={{ width: hoveredItem === item.id ? "100%" : 0 }}
-                    transition={{
-                      duration: 0.3,
-                      ease: "easeInOut",
-                    }}
-                  />
                 </motion.button>
               </motion.div>
             ))}

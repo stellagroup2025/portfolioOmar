@@ -1,81 +1,26 @@
 "use client";
 
-import type React from "react";
 import { motion, useInView } from "framer-motion";
 import { useState, useRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import Link from "next/link";
-import { Playfair_Display, Cormorant_Garamond } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { ArrowRight, Mail, Linkedin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800", "900"],
 });
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
+
+const inter = Inter({ subsets: ["latin"] });
 
 export function Contact() {
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false);
   const isMobile = useIsMobile();
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: false, amount: 0.2 });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormState((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulación de envío
-    setTimeout(() => {
-      console.log("Form submitted:", formState);
-      setIsSubmitting(false);
-      setFormSubmitted(true);
-      // Reset form
-      setFormState({
-        name: "",
-        email: "",
-        message: "",
-      });
-    }, 1500);
-  };
-
-  const socialLinks = [
-    { name: "LinkedIn", url: "https://linkedin.com/in/omarsomoza" },
-    { name: "Dribbble", url: "https://dribbble.com/omarsomoza" },
-    { name: "Twitter", url: "https://twitter.com/omarsomoza" },
-    { name: "GitHub", url: "https://github.com/omarsomoza" },
-  ];
-
-  const fadeIn = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-      },
-    }),
-  };
-
-  // Animación para las letras del título
-  const titleText = "Hello.";
+  // Title Animation
+  const titleText = "Conversemos";
   const letters = titleText.split("");
 
   const containerVariants = {
@@ -83,215 +28,107 @@ export function Contact() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.8,
+        staggerChildren: 0.1,
+        delayChildren: 0.5,
       },
     },
   };
 
   const letterVariants = {
-    hidden: {
-      opacity: 0,
-      x: 100,
-      y: 20,
-    },
+    hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
-      x: 0,
       y: 0,
       transition: {
         type: "spring",
-        stiffness: 60,
-        damping: 12,
-        mass: 0.8,
-        duration: 1.2,
+        stiffness: 50,
+        damping: 20,
+        duration: 1.0,
       },
     },
   };
 
-  // Animación para la cita
-  const quoteVariants = {
+  const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        delay: 2.0,
-        duration: 1.2,
-        ease: [0.25, 0.4, 0.25, 1],
-      },
-    },
+      transition: { delay: 1.5, duration: 0.8 }
+    }
   };
 
   return (
-    <div className="w-full h-full flex flex-col relative overflow-hidden">
-      {/* Workspace background image */}
-      <div className="absolute inset-0 -z-10">
-        <img
-          src="/images/contact-workspace.png"
-          alt="Workspace background"
-          className="w-full h-full object-cover"
-        />
-        {/* Light overlay for better text readability */}
-        <div className="absolute inset-0 bg-white/60" />
-        {/* Subtle animated elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Floating particles */}
-          {Array.from({ length: 8 }).map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{
-                opacity: 0,
-                y: Math.random() * 20,
-                x: Math.random() * 100 - 50,
-              }}
-              animate={{
-                opacity: [0, 0.1, 0],
-                y: [0, -10, 0],
-                transition: {
-                  opacity: { duration: 1, delay: i * 0.2 },
-                  y: {
-                    duration: 3 + i,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                    ease: "easeInOut",
-                    delay: i * 0.5,
-                  },
-                },
-              }}
-              className="absolute w-[2px] h-[2px] rounded-full bg-black/20"
-              style={{
-                left: `${20 + i * 10}%`,
-                top: `${30 + i * 8}%`,
-              }}
-            />
-          ))}
-        </div>
-        {/* Subtle light effects */}
-        <div className="absolute top-[20%] right-[20%] w-[200px] h-[200px] rounded-full bg-[#e1dbd6]/[0.3] blur-3xl" />
-        <div className="absolute bottom-[10%] left-[10%] w-[150px] h-[150px] rounded-full bg-[#d1d1d1]/[0.3] blur-3xl" />
+    <div className="w-full h-full flex flex-col relative overflow-hidden bg-[#faf9f6]">
+      {/* Background Elements */}
+      <div className="absolute inset-0 z-0 opacity-30">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-100/40 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
       </div>
 
-      {/* Título animado posicionado más hacia el centro-derecha */}
-      <div
-        className="absolute top-1/2 left-1/2 transform -translate-y-1/2 translate-x-[10%] sm:translate-x-[15%] md:translate-x-[20%] z-10"
-        ref={containerRef}
-      >
-        <motion.h1
-          className={cn(
-            "text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-light tracking-tight overflow-hidden text-black",
-            playfair.className
-          )}
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {letters.map((letter, index) => (
-            <motion.span
-              key={index}
-              variants={letterVariants}
-              className="inline-block"
-              style={{
-                // Preservar espacios
-                whiteSpace: letter === " " ? "pre" : "normal",
-              }}
-            >
-              {letter === " " ? "\u00A0" : letter}
-            </motion.span>
-          ))}
-        </motion.h1>
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-6 md:px-16">
 
-        {/* Cita en cursiva */}
-        <motion.p
-          className={cn(
-            "text-sm sm:text-base md:text-lg font-light italic text-black/70 mt-4 sm:mt-6 md:mt-8 max-w-md",
-            cormorant.className
-          )}
-          variants={quoteVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          "Cada paso es una oportunidad, cada desafío una lección, y cada meta
-          el comienzo de algo aún más grande."
-        </motion.p>
-      </div>
-
-      {/* Información de contacto en la parte inferior izquierda */}
-      <motion.div
-        className="w-full z-10 px-4 sm:px-6 md:px-16 lg:px-24 mt-auto pb-[100px]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.5, duration: 0.8 }}
-      >
-        <div className="max-w-md space-y-2">
-          <div>
-            <p
-              className={cn(
-                "text-black/70 text-sm font-light tracking-wide mb-0",
-                cormorant.className
-              )}
-            >
-              Email:
-            </p>
-            <a
-              href="mailto:hello@omarsomoza.com"
-              className={cn(
-                "text-xl sm:text-2xl font-light text-black hover:text-black/80 transition-colors tracking-wide",
-                cormorant.className
-              )}
-            >
-              contacto@omarsomoza.es
-            </a>
-          </div>
-
-          <div>
-            <p
-              className={cn(
-                "text-black/70 text-sm font-light tracking-wide mb-0",
-                cormorant.className
-              )}
-            >
-              En internet:
-            </p>
-            <div className="flex flex-wrap gap-x-6 gap-y-1">
-              {socialLinks.map((link, index) => (
-                <Link
-                  key={index}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    "text-black hover:text-black/70 transition-colors text-lg font-light tracking-wide",
-                    cormorant.className
-                  )}
-                >
-                  {link.name}
-                </Link>
+        <div className="max-w-4xl w-full text-center" ref={containerRef}>
+          <motion.div
+            className="mb-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <h1 className={cn("text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-black mb-6", playfair.className)}>
+              {letters.map((letter, index) => (
+                <motion.span key={index} variants={letterVariants} className="inline-block">
+                  {letter === " " ? "\u00A0" : letter}
+                </motion.span>
               ))}
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
+            </h1>
+          </motion.div>
 
-function Clock(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
+          <motion.div
+            className="space-y-8"
+            initial="hidden"
+            animate="visible"
+            variants={fadeIn}
+          >
+            <p className="text-xl md:text-2xl text-black/60 font-light max-w-2xl mx-auto leading-relaxed">
+              Sin formularios. Sin ventas. <br />
+              Solo una conversación sobre si tiene sentido construir algo juntos.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+              <a
+                href="mailto:contacto@omarsomoza.es"
+                className="text-xl md:text-2xl text-black border-b border-black/20 hover:border-black transition-all duration-300 pb-2 italic font-light"
+              >
+                contacto@omarsomoza.es
+              </a>
+            </div>
+
+            <div className="pt-8 opacity-60 hover:opacity-100 transition-opacity duration-300">
+              <a
+                href="https://linkedin.com/in/omarsomoza"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 text-sm uppercase tracking-widest text-black/40 hover:text-black"
+              >
+                <span>O conecta en LinkedIn</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="absolute bottom-12 left-0 w-full text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.5, duration: 1 }}
+        >
+          <p className="text-sm text-black/30 font-light tracking-widest uppercase">
+            EST. 2025 • Omar Somoza • Product & Strategy
+          </p>
+        </motion.div>
+
+      </div>
+    </div>
   );
 }

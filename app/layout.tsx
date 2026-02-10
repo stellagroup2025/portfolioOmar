@@ -7,13 +7,13 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
-  weight: ["400", "500", "600", "700", "900"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata = {
-  title: "Omar Somoza | Portfolio",
+  title: "Omar Somoza | Strategic Product Builder",
   description:
-    "Full Stack Developer especializado en crear aplicaciones web modernas",
+    "Constructor de Productos Digitales & Estratega de Negocio. Transformando complejidad en ventaja competitiva.",
   generator: "v0.dev",
 };
 
@@ -24,8 +24,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.variable} ${playfair.variable} font-sans`}>
-        <ThemeProvider attribute="class" defaultTheme="dark">
+      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           {children}
         </ThemeProvider>
       </body>

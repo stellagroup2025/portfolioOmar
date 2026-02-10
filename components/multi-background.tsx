@@ -153,8 +153,8 @@ function ElegantShape({
           style={
             shape === "triangle"
               ? {
-                  clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
-                }
+                clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
+              }
               : {}
           }
         />
@@ -425,7 +425,7 @@ function AnimatedCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 z-5"
+      className="absolute inset-0 z-5 opacity-60" // Reduced opacity to 60%
       style={{ mixBlendMode: "multiply" }}
     />
   );
@@ -629,9 +629,8 @@ export function MinimalBackground() {
             delay={i * 0.3}
             size={Math.random() * 6 + 2}
             duration={Math.random() * 20 + 15}
-            className={`left-[${Math.random() * 100}%] top-[${
-              Math.random() * 100
-            }%]`}
+            className={`left-[${Math.random() * 100}%] top-[${Math.random() * 100
+              }%]`}
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -860,8 +859,8 @@ export default function MultiBackground() {
                   currentBackground === "cosmic"
                     ? "bg-gradient-to-r from-[#6b5b73] via-black/90 to-[#6b5b73]"
                     : currentBackground === "geometric"
-                    ? "bg-gradient-to-r from-[#6b5b73] via-black/90 to-[#6b5b73]"
-                    : "bg-gradient-to-r from-[#6b5b73] via-black/90 to-[#6b5b73]",
+                      ? "bg-gradient-to-r from-[#6b5b73] via-black/90 to-[#6b5b73]"
+                      : "bg-gradient-to-r from-[#6b5b73] via-black/90 to-[#6b5b73]",
                   pacifico.className
                 )}
               >

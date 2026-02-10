@@ -2,13 +2,19 @@
 
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { GeometricBackground } from "@/components/multi-background";
-import { Playfair_Display } from "next/font/google";
+import { OrganicOrderBackground } from "@/components/organic-order-background";
+import { Playfair_Display, Space_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { ArrowDown } from "lucide-react";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+});
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export function Home() {
@@ -19,178 +25,108 @@ export function Home() {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: 0.15,
+        delayChildren: 0.5,
       },
     },
   };
 
   const item = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 50 },
     show: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
-        ease: [0.25, 0.4, 0.25, 1],
+        duration: 1.0,
+        ease: [0.22, 1, 0.36, 1], // Custom cubic bezier for "heavy" feel
       },
     },
   };
 
-  const lineAnimation = {
-    hidden: { width: "0%" },
-    show: {
-      width: "100%",
-      transition: {
-        duration: 1.2,
-        ease: [0.25, 0.4, 0.25, 1],
-        delay: 0.8,
-      },
-    },
-  };
-
-  const technologies = [
-    "JavaScript",
-    "TypeScript",
-    "React",
-    "Next.js",
-    "Node.js",
-    "Express",
-    "MongoDB",
-    "PostgreSQL",
-  ];
-
-  const techContainer = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 1.2,
-      },
-    },
-  };
-
-  const techItem = {
-    hidden: { opacity: 0, scale: 0.8 },
-    show: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.25, 0.4, 0.25, 1],
-      },
-    },
-  };
+  // Main Manifesto Content (Clean & Static)
 
   return (
-    <div className="relative w-full h-full flex items-end">
-      <GeometricBackground />
+    <div className="relative w-full h-full flex flex-col justify-between p-6 sm:p-12 md:p-16 lg:p-24 overflow-hidden">
+      <OrganicOrderBackground />
 
-      {/* Contenido principal */}
+      {/* Top Bar: Clean & Minimal */}
       <motion.div
-        className={cn(
-          "w-full z-10 px-6 sm:pl-20 md:pl-24 lg:pl-28",
-          isMobile ? "max-w-full pb-16" : "max-w-2xl pb-12"
-        )}
+        className="w-full flex justify-end items-start z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+      >
+        {/* Empty or minimal branding if needed later */}
+      </motion.div>
+
+      {/* Main Manifesto Content */}
+      <motion.div
+        className="w-full z-10 max-w-5xl mt-auto mb-auto"
         variants={container}
         initial="hidden"
         animate="show"
       >
-        {/* Título principal */}
-        <motion.div className="mb-3" variants={item}>
-          <h1
-            className={cn(
-              "font-light tracking-tight leading-tight text-black mb-1.5",
-              isMobile ? "text-2xl text-center" : "text-2xl md:text-3xl",
-              playfair.className
-            )}
-          >
-            Omar Somoza
-          </h1>
-
-          {/* Línea decorativa */}
-          <motion.div
-            className="h-[0.5px] bg-black"
-            variants={lineAnimation}
-            initial="hidden"
-            animate="show"
-          />
+        <motion.div variants={item} className="mb-12">
+          <span className="block text-sm md:text-base tracking-[0.25em] uppercase text-black/40 font-medium">
+            Principio 01
+          </span>
         </motion.div>
 
-        {/* Texto descriptivo profesional */}
-        <motion.div className="mb-4" variants={item}>
-          <p
-            className={cn(
-              "font-light tracking-tight text-black/90",
-              isMobile
-                ? "text-sm text-center max-w-full"
-                : "text-base md:text-xl max-w-xl"
-            )}
-          >
-            Project Manager & Producto Owner
-          </p>
-        </motion.div>
+        <motion.h1
+          className={cn(
+            "font-light tracking-tight leading-[0.98] text-black mb-16", // Slightly tighter leading (1.1 -> 0.98)
+            isMobile ? "text-[2.25rem]" : "text-[3.25rem] md:text-[4rem] lg:text-[4.2rem]",
+            playfair.className
+          )}
+          variants={item}
+        >
+          Cuando las ideas encuentran <br />
+          forma, <br />
+          <span className="opacity-90">el crecimiento es natural.</span>
+        </motion.h1>
 
-        {/* Subtítulo */}
-        <motion.div className="mb-4 sm:mb-6" variants={item}>
-          <h2
-            className={cn(
-              "font-light leading-relaxed text-black",
-              isMobile
-                ? "text-sm text-center max-w-full"
-                : "text-sm md:text-base max-w-xl"
-            )}
-          >
-            Hago que las ideas se conviertan en aplicaciones digitales, de
-            manera sencilla, escalable e intuitiva. Introducción sutil: Gestiono
-            proyectos de desarrollo de software enfocados en la simplicidad,
-            rapidez y escalabilidad. Mi objetivo es hacer que las cosas
-            funcionen tan bien que ni siquiera notes el esfuerzo detrás.
-          </h2>
-        </motion.div>
-
-        {/* Tecnologías */}
-        <motion.div className="mb-4 sm:mb-6" variants={item}>
-          <div className="space-y-3">
-            <span
-              className={cn(
-                "text-[10px] sm:text-xs font-light tracking-[0.2em] uppercase text-black/70",
-                isMobile ? "block text-center" : ""
-              )}
-            >
-              Tecnologías
-            </span>
-            <motion.div
-              className={cn(
-                "flex flex-wrap gap-x-1.5 gap-y-1.5 sm:gap-x-2 sm:gap-y-2",
-                isMobile ? "justify-center" : ""
-              )}
-              variants={techContainer}
-              initial="hidden"
-              animate="show"
-            >
-              {technologies.map((tech, index) => (
-                <motion.span
-                  key={index}
-                  variants={techItem}
-                  className="px-2 py-1 text-[9px] sm:text-[8px] font-light text-black/80 tracking-wide border border-black/10 bg-black/[0.02] backdrop-blur-sm rounded-sm hover:border-black/20 hover:bg-black/[0.05] transition-all duration-300"
-                  whileHover={{
-                    scale: 1.05,
-                    y: -1,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 10,
-                  }}
-                >
-                  {tech}
-                </motion.span>
-              ))}
-            </motion.div>
+        <motion.div
+          className="flex flex-col gap-12 items-start max-w-4xl"
+          variants={item}
+        >
+          {/* The Formula: Idea ↔ Forma + Tiempo = Crecimiento (Increased weight/contrast) */}
+          <div className="space-y-2">
+            <h2 className={cn(
+              "text-xl md:text-3xl text-black/85 font-normal leading-relaxed tracking-wide", // Increased weight & contrast
+              spaceMono.className
+            )}>
+              <span className="opacity-60">Idea</span> <span className="mx-2 opacity-90">↔</span> <span className="opacity-100">Forma</span>
+              <span className="mx-4 opacity-50">+</span>
+              <span className="opacity-70">Tiempo</span>
+              <span className="mx-4 opacity-50">=</span>
+              <span className="border-b border-black/30 pb-1">Crecimiento</span>
+            </h2>
           </div>
+
+          {/* Micro-copy: Strategy Technical Triangle - High Contrast & Bold (Kept as requested) */}
+          <div className="py-2 inline-block">
+            <p className={cn(
+              "text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-black/40",
+              spaceMono.className
+            )}>
+              Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo de Producto
+            </p>
+          </div>
+
         </motion.div>
+      </motion.div>
+
+      {/* Bottom: Scroll Indicator */}
+      <motion.div
+        className="w-full flex justify-center items-end z-10 pb-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+      >
+        <div className="flex flex-col items-center gap-2 animate-bounce opacity-20 hover:opacity-100 transition-opacity duration-500">
+          <span className={cn("text-[10px] uppercase tracking-widest", spaceMono.className)}>Scroll</span>
+          <ArrowDown className="w-4 h-4" />
+        </div>
       </motion.div>
     </div>
   );

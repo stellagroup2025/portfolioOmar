@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Home } from "@/components/sections/home";
 import { About } from "@/components/sections/about";
 import { Work } from "@/components/sections/work";
-import { Services } from "@/components/sections/services";
+import { Approach } from "@/components/sections/approach";
 import { Contact } from "@/components/sections/contact";
 import { TypographicNavigation } from "@/components/typographic-navigation";
 import { SocialLinks } from "@/components/social-links";
@@ -49,13 +49,13 @@ export default function Portfolio() {
 
   const sections = {
     home: <Home />,
+    approach: <Approach />,
     work: (
       <Work
         activeProject={activeProject}
         setActiveProject={handleProjectChange}
       />
     ),
-    services: <Services />,
     about: <About />,
     contact: <Contact />,
   };
