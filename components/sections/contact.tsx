@@ -1,132 +1,100 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Space_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Mail, Linkedin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { SparkBackground } from "@/components/spark-background";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600"],
 });
 
-const inter = Inter({ subsets: ["latin"] });
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+type Tab = 'hablemos' | 'conectar';
 
 export function Contact() {
   const isMobile = useIsMobile();
-  const containerRef = useRef(null);
+  const [copied, setCopied] = useState(false);
 
-  // Title Animation
-  const titleText = "Conversemos";
-  const letters = titleText.split("");
-
-  const containerVariants = {
-    hidden: { opacity: 1 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.5,
-      },
-    },
-  };
-
-  const letterVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 50,
-        damping: 20,
-        duration: 1.0,
-      },
-    },
-  };
-
-  const fadeIn = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { delay: 1.5, duration: 0.8 }
-    }
+  const handleCopy = () => {
+    navigator.clipboard.writeText("contacto@omarsomoza.es");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="w-full h-full flex flex-col relative overflow-hidden bg-[#faf9f6]">
-      {/* Background Elements */}
-      <div className="absolute inset-0 z-0 opacity-30">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-100/40 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-      </div>
+    <div className="w-full h-full bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden p-6 md:p-12">
 
-      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-6 md:px-16">
+      {/* BACKGROUND */}
+      <SparkBackground />
 
-        <div className="max-w-4xl w-full text-center" ref={containerRef}>
-          <motion.div
-            className="mb-8"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <h1 className={cn("text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-black mb-6", playfair.className)}>
-              {letters.map((letter, index) => (
-                <motion.span key={index} variants={letterVariants} className="inline-block">
-                  {letter === " " ? "\u00A0" : letter}
-                </motion.span>
-              ))}
-            </h1>
-          </motion.div>
+      <div className="w-full max-w-4xl z-10 flex flex-col items-center text-center gap-10 md:gap-14">
 
-          <motion.div
-            className="space-y-8"
-            initial="hidden"
-            animate="visible"
-            variants={fadeIn}
-          >
-            <p className="text-xl md:text-2xl text-black/60 font-light max-w-2xl mx-auto leading-relaxed">
-              Sin formularios. Sin ventas. <br />
-              Solo una conversación sobre si tiene sentido construir algo juntos.
-            </p>
+        {/* HEADLINE */}
+        <h2 className={cn("text-3xl md:text-5xl lg:text-7xl text-black font-normal leading-tight", playfair.className)}>
+          Hay ideas que no necesitan un proceso.<br />
+          <span className="text-black/40 italic">Solo el momento adecuado.</span>
+        </h2>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
-              <a
-                href="mailto:contacto@omarsomoza.es"
-                className="text-xl md:text-2xl text-black border-b border-black/20 hover:border-black transition-all duration-300 pb-2 italic font-light"
-              >
-                contacto@omarsomoza.es
-              </a>
-            </div>
+        {/* SUBHEADLINE */}
+        <p className="text-lg md:text-2xl text-black/60 font-light leading-relaxed max-w-2xl">
+          A veces, una conversación es suficiente.
+        </p>
 
-            <div className="pt-8 opacity-60 hover:opacity-100 transition-opacity duration-300">
-              <a
-                href="https://linkedin.com/in/omarsomoza"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 text-sm uppercase tracking-widest text-black/40 hover:text-black"
-              >
-                <span>O conecta en LinkedIn</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          </motion.div>
-        </div>
-
-        <motion.div
-          className="absolute bottom-12 left-0 w-full text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.5, duration: 1 }}
+        {/* MAIN CTA - LINKEDIN */}
+        <a
+          href="https://www.linkedin.com/in/omar-somoza-230b71228/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(
+            "text-2xl md:text-3xl text-black border-b border-black/20 hover:border-black transition-all duration-300 pb-1 italic font-medium no-underline hover:pr-4",
+            playfair.className
+          )}
         >
-          <p className="text-sm text-black/30 font-light tracking-widest uppercase">
-            EST. 2025 • Omar Somoza • Product & Strategy
-          </p>
-        </motion.div>
+          Nos vemos en LinkedIn &rarr;
+        </a>
+
+        {/* SECONDARY - EMAIL WITH COPY FUNCTION */}
+        <div className="flex flex-col md:flex-row items-center gap-2 text-base md:text-lg text-black/40 font-light mt-4 mb-8">
+          <span>o escríbeme en</span>
+
+          <button
+            onClick={handleCopy}
+            className="relative group inline-flex flex-col items-center justify-center align-baseline"
+          >
+            <span className={cn(
+              "text-black/60 hover:text-black transition-colors border-b border-transparent hover:border-black/20 pb-0.5",
+              copied && "text-black border-black"
+            )}>
+              contacto@omarsomoza.es
+            </span>
+
+            {/* FEEDBACK - Adjusted for Mobile to avoid overlap */}
+            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 h-4 flex items-center justify-center whitespace-nowrap pointer-events-none w-full">
+              <span className={cn(
+                "absolute font-sans text-[10px] tracking-[0.2em] uppercase transition-all duration-300 ease-out text-black/40",
+                !copied ? "opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0" : "opacity-0"
+              )}>
+                Copiar
+              </span>
+
+              <span className={cn(
+                "absolute font-sans text-[10px] tracking-[0.2em] uppercase transition-all duration-300 ease-out text-green-600 font-bold",
+                copied ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
+              )}>
+                ¡Copiado!
+              </span>
+            </span>
+          </button>
+        </div>
 
       </div>
     </div>

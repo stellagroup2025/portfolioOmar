@@ -1,7 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { Playfair_Display } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400"] });
 
 interface LogoProps {
   onClick?: () => void;
@@ -17,22 +20,13 @@ export function Logo({ onClick }: LogoProps) {
   return (
     <motion.button
       onClick={handleClick}
-      className="cursor-pointer"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      className={cn(
+        "text-lg md:text-xl text-black/80 hover:text-black/60 transition-colors duration-500 cursor-pointer select-none",
+        playfair.className
+      )}
+      whileTap={{ scale: 0.98 }}
     >
-      <Image
-        src="/images/omar-logo.png"
-        alt="OS Logo"
-        width={60}
-        height={60}
-        className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain filter invert brightness-0 contrast-100"
-        priority
-        style={{
-          filter: "invert(1) brightness(2) contrast(1)",
-          mixBlendMode: "normal",
-        }}
-      />
+      Omar Somoza
     </motion.button>
   );
 }

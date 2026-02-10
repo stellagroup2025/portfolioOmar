@@ -20,6 +20,7 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("home");
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [activeProject, setActiveProject] = useState<string | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useIsMobile();
 
   const handleSectionChange = (section: string) => {
@@ -48,7 +49,7 @@ export default function Portfolio() {
   }, [activeSection]);
 
   const sections = {
-    home: <Home />,
+    home: <Home onOpenMenu={() => setIsMenuOpen(true)} />,
     approach: <Approach />,
     work: (
       <Work
@@ -78,13 +79,7 @@ export default function Portfolio() {
     <div className="min-h-screen overflow-hidden text-black  aaaa">
       <header className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Logo onClick={() => handleSectionChange("home")} />
-          </motion.div>
+          <Logo onClick={() => handleSectionChange("home")} />
 
           <div className="flex items-center gap-3 sm:gap-4">
             <LanguageToggle />
@@ -114,6 +109,8 @@ export default function Portfolio() {
           setActiveSection={handleSectionChange}
           isTransitioning={isTransitioning}
           isMobile={isMobile}
+          isOpen={isMenuOpen}
+          setIsOpen={setIsMenuOpen}
         />
       </div>
 

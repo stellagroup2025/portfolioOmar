@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion"; // Added AnimatePresence
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Playfair_Display, Space_Mono } from "next/font/google";
+import { Playfair_Display, Space_Mono } from "next/font/google"; // Removed unnecessary imports
 import { cn } from "@/lib/utils";
+import { ThinkingParticles } from "@/components/thinking-particles"; // Import new background
 
 const playfair = Playfair_Display({
     subsets: ["latin"],
@@ -15,143 +17,205 @@ const spaceMono = Space_Mono({
     weight: ["400", "700"],
 });
 
-// Block 2 Data: System Types
+// TYPES & DATA
+type Tab = 'manifesto' | 'systems' | 'principles';
+
 const systemTypes = [
     {
         title: "Plataformas de negocio",
-        description: "Sistemas que ordenan operaciones, datos y decisiones."
+        description: "Operaciones, datos y decisiones."
     },
     {
         title: "Productos SaaS B2B",
-        description: "Pensados para crecer sin perder control ni legibilidad."
+        description: "Escalabilidad y control."
     },
     {
-        title: "Automatización e IA aplicada",
-        description: "Reducir fricción operativa sin romper procesos existentes."
+        title: "Automatización e IA",
+        description: "Eficiencia sin fricción."
     },
     {
-        title: "Arquitectura para escalar",
-        description: "Bases técnicas que permiten crecer sin rehacerlo todo."
+        title: "Arquitectura",
+        description: "Bases para crecer."
     }
 ];
 
-// Block 3 Data: Thinking Principles
 const principles = [
-    "La arquitectura es una decisión de negocio.",
-    "Escalar es mantener claridad bajo presión.",
-    "Automatizar antes que añadir personas.",
-    "La IA debe integrarse con criterio, no imponerse.",
-    "El software debe reducir fricción, no crearla."
+    "Arquitectura es negocio.",
+    "Escalar es mantener claridad.",
+    "Automatizar > Contratar.",
+    "IA con criterio, no por moda.",
+    "Reducir fricción, no crearla."
 ];
 
 export function Approach() {
     const isMobile = useIsMobile();
+    const [activeTab, setActiveTab] = useState<Tab>('manifesto');
 
-    const container = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2,
-                delayChildren: 0.1,
-            },
-        },
-    };
-
-    const item = {
-        hidden: { opacity: 0, y: 30 },
+    // ANIMATION VARIANTS
+    const fade = {
+        hidden: { opacity: 0, y: 20, filter: "blur(10px)" }, // blur effect
         show: {
             opacity: 1,
             y: 0,
-            transition: {
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-            },
+            filter: "blur(0px)",
+            transition: { duration: 0.6, ease: "easeOut" }
         },
+        exit: {
+            opacity: 0,
+            y: -20,
+            filter: "blur(10px)",
+            transition: { duration: 0.4, ease: "easeIn" }
+        }
     };
 
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center py-20 px-8 sm:px-20 md:px-28 lg:px-40 bg-white dark:bg-black overflow-hidden relative">
+        <div className="w-full h-full bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden p-6 md:p-12">
 
-            <motion.div
-                className="w-full max-w-5xl z-10"
-                variants={container}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-10%" }}
-            >
+            {/* ABSTRACT BACKGROUND */}
+            <ThinkingParticles />
 
-                {/* BLOCK 1: CONTEXT REAL (Truth Anchor) */}
-                <motion.div variants={item} className="mb-24 md:mb-32">
-                    <h2 className={cn(
-                        "text-3xl md:text-5xl font-light text-black dark:text-white mb-8 leading-tight",
-                        playfair.className
-                    )}>
-                        Sistemas reales. Contextos reales.
-                    </h2>
-                    <p className="text-lg md:text-xl text-black/70 dark:text-white/70 font-light leading-relaxed max-w-2xl">
-                        Construir en producción cambia la forma de pensar. He trabajado en productos que se usan a diario,
-                        con equipos reales y usuarios reales. La experiencia en producción exige criterio.
-                    </p>
-                </motion.div>
-
-
-                {/* BLOCK 2: SYSTEM TYPES (Your Territory) */}
-                <motion.div variants={item} className="mb-24 md:mb-32">
-                    <div className="mb-12 border-b border-black/10 dark:border-white/10 pb-4">
-                        <span className={cn(
-                            "text-xs md:text-sm tracking-widest uppercase text-black/50 dark:text-white/50",
-                            spaceMono.className
-                        )}>
-                            Qué construyo
-                        </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-                        {systemTypes.map((type, idx) => (
-                            <div key={idx} className="group">
-                                <h3 className={cn(
-                                    "text-xl md:text-2xl font-normal text-black dark:text-white mb-3 group-hover:text-black/80 transition-colors",
-                                    playfair.className
-                                )}>
-                                    {type.title}
-                                </h3>
-                                <p className="text-base text-black/60 dark:text-white/60 font-light leading-relaxed">
-                                    {type.description}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
-
-
-                {/* BLOCK 3: THINKING (Decisions > Features) */}
-                <motion.div variants={item}>
-                    <div className="mb-12 border-b border-black/10 dark:border-white/10 pb-4">
-                        <span className={cn(
-                            "text-xs md:text-sm tracking-widest uppercase text-black/50 dark:text-white/50",
-                            spaceMono.className
-                        )}>
-                            Cómo pienso
-                        </span>
-                    </div>
-
-                    <ul className="space-y-6">
-                        {principles.map((principle, idx) => (
-                            <li key={idx} className="flex items-start gap-4">
-                                <span className="text-black/30 dark:text-white/30 font-light mt-1">—</span>
-                                <span className={cn(
-                                    "text-xl md:text-3xl text-black/80 dark:text-white/80 font-light leading-tight",
-                                    playfair.className
-                                )}>
-                                    {principle}
+            <div className="w-full max-w-5xl z-10">
+                {/* CONTENT AREA - FIXED HEIGHT TO PREVENT JUMPS */}
+                <div className="h-[55vh] md:h-[60vh] flex items-center justify-center mb-8">
+                    <AnimatePresence mode="wait">
+                        {activeTab === 'manifesto' && (
+                            <motion.div
+                                key="manifesto"
+                                variants={fade}
+                                initial="hidden"
+                                animate="show"
+                                exit="exit"
+                                className="w-full max-w-3xl flex flex-col gap-8 md:gap-12"
+                            >
+                                <span className={cn("text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
+                                    01 Manifiesto
                                 </span>
-                            </li>
-                        ))}
-                    </ul>
-                </motion.div>
+                                <h2 className={cn("text-3xl md:text-5xl lg:text-7xl leading-[1.05] text-black font-normal", playfair.className)}>
+                                    Sistemas reales.<br />
+                                    <span className="opacity-50">Contextos reales.</span>
+                                </h2>
+                                <div className="flex flex-col gap-6 md:gap-8">
+                                    <p className="text-lg md:text-2xl text-black/60 font-light leading-relaxed max-w-xl">
+                                        Construir en producción exige criterio. No busco código perfecto, busco sistemas que sobrevivan al uso real.
+                                    </p>
+                                    <button
+                                        onClick={() => setActiveTab('systems')}
+                                        className={cn(
+                                            "text-lg md:text-xl text-black italic text-left hover:underline decoration-1 underline-offset-4 transition-all w-fit mt-4",
+                                            playfair.className
+                                        )}
+                                    >
+                                        Explorar mis sistemas &rarr;
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
 
-            </motion.div>
+                        {activeTab === 'systems' && (
+                            <motion.div
+                                key="systems"
+                                variants={fade}
+                                initial="hidden"
+                                animate="show"
+                                exit="exit"
+                                className="w-full"
+                            >
+                                <div className="flex justify-between items-baseline mb-8 md:mb-12">
+                                    <span className={cn("text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
+                                        02 Qué construyo
+                                    </span>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-8">
+                                    {systemTypes.map((type, idx) => (
+                                        <div key={idx} className="flex flex-col gap-2">
+                                            <h3 className={cn("text-xl md:text-3xl text-black font-normal", playfair.className)}>
+                                                {type.title}
+                                            </h3>
+                                            <p className="text-sm md:text-base text-black/50 leading-relaxed font-normal">
+                                                {type.description}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button
+                                    onClick={() => setActiveTab('principles')}
+                                    className={cn(
+                                        "text-lg md:text-xl text-black italic text-left hover:underline decoration-1 underline-offset-4 transition-all w-fit",
+                                        playfair.className
+                                    )}
+                                >
+                                    Ver principios &rarr;
+                                </button>
+                            </motion.div>
+                        )}
+
+                        {activeTab === 'principles' && (
+                            <motion.div
+                                key="principles"
+                                variants={fade}
+                                initial="hidden"
+                                animate="show"
+                                exit="exit"
+                                className="w-full max-w-4xl"
+                            >
+                                <span className={cn("block mb-8 md:mb-12 text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
+                                    03 Cómo pienso
+                                </span>
+                                <div className="flex flex-col gap-6 md:gap-8 mb-8">
+                                    {principles.map((p, idx) => (
+                                        <div key={idx} className="flex items-baseline gap-6 border-b border-black/5 pb-4 last:border-0 pl-0">
+                                            <span className="text-xs text-black/20 font-mono">0{idx + 1}</span>
+                                            <h3 className={cn("text-xl md:text-4xl text-black/80 font-normal", playfair.className)}>
+                                                {p}
+                                            </h3>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button
+                                    onClick={() => setActiveTab('manifesto')}
+                                    className={cn(
+                                        "text-sm md:text-base text-black/40 italic text-left hover:text-black transition-all w-fit",
+                                        playfair.className
+                                    )}
+                                >
+                                    Volver al inicio ↺
+                                </button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+
+                {/* TAB NAVIGATION (Fixed Position) */}
+                <div className="w-full flex justify-start border-t border-black/5 pt-4">
+                    <div className="flex items-center gap-8 md:gap-16">
+                        {[
+                            { id: 'manifesto', label: 'Manifiesto' },
+                            { id: 'systems', label: 'Sistemas' },
+                            { id: 'principles', label: 'Principios' }
+                        ].map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id as Tab)}
+                                className={cn(
+                                    "text-xs md:text-sm tracking-widest uppercase transition-all duration-300 relative py-2",
+                                    spaceMono.className,
+                                    activeTab === tab.id ? "text-black font-bold" : "text-black/30 hover:text-black/60"
+                                )}
+                            >
+                                {tab.label}
+                                {activeTab === tab.id && (
+                                    <motion.div
+                                        layoutId="activeTabIndicator"
+                                        className="absolute bottom-0 left-0 w-full h-px bg-black"
+                                    />
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
         </div>
     );
 }

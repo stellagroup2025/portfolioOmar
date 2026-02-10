@@ -17,7 +17,11 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
 });
 
-export function Home() {
+interface HomeProps {
+  onOpenMenu?: () => void;
+}
+
+export function Home({ onOpenMenu }: HomeProps) {
   const isMobile = useIsMobile();
 
   const container = {
@@ -46,7 +50,7 @@ export function Home() {
   // Main Manifesto Content (Clean & Static)
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-between p-6 sm:p-12 md:p-16 lg:p-24 overflow-hidden">
+    <div className="relative w-full h-full flex flex-col justify-between p-6 pt-32 sm:p-12 md:p-16 lg:p-24 overflow-hidden">
       <OrganicOrderBackground />
 
       {/* Top Bar: Clean & Minimal */}
@@ -96,14 +100,26 @@ export function Home() {
           )}
         </motion.h1>
 
+        {/* Mobile: Strategy/Tech Text - Visible immediately below headline */}
+        {isMobile && (
+          <motion.div variants={item} className="mt-12 block md:hidden">
+            <p className={cn(
+              "text-xs font-bold tracking-[0.15em] uppercase text-black/60",
+              spaceMono.className
+            )}>
+              Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo
+            </p>
+          </motion.div>
+        )}
+
         <motion.div
           className={cn(
             "flex flex-col gap-12 items-start max-w-4xl",
-            isMobile && "mt-[35vh]" // Push content down on mobile (Below fold)
+            isMobile ? "mt-[50vh]" : "mt-0" // Formula still pushed down on mobile
           )}
           variants={item}
         >
-          {/* The Formula: Idea ↔ Forma + Tiempo = Crecimiento (Increased weight/contrast) */}
+          {/* The Formula */}
           <div className="space-y-2">
             <h2 className={cn(
               "text-xl md:text-3xl text-black/85 font-normal leading-relaxed tracking-wide",
@@ -117,10 +133,10 @@ export function Home() {
             </h2>
           </div>
 
-          {/* Micro-copy: Strategy Technical Triangle - High Contrast & Bold (Kept as requested) */}
-          <div className="py-2 inline-block">
+          {/* Desktop: Strategy/Tech Text - Visible below formula */}
+          <div className="py-2 hidden md:inline-block">
             <p className={cn(
-              "text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-black/60", // Increased contrast for mobile
+              "text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-black/60",
               spaceMono.className
             )}>
               Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo
@@ -130,13 +146,27 @@ export function Home() {
         </motion.div>
       </motion.div>
 
-      {/* Bottom: Scroll Indicator */}
+      {/* Bottom: Scroll Indicator & Menu Trigger */}
       <motion.div
-        className="w-full flex justify-center items-end z-10 pb-8"
+        className="w-full flex flex-col items-center justify-end z-20 pb-12 gap-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
+        transition={{ delay: 1, duration: 1 }}
       >
+        {/* Subtle Menu Trigger - Mobile Only (CSS controlled) */}
+        <button
+          onClick={onOpenMenu}
+          className={cn(
+            "block md:hidden", // Visible on mobile, hidden on desktop
+            "text-[10px] uppercase tracking-[0.3em] font-medium transition-all duration-500 p-4",
+            "text-black/40 hover:text-black", // Slightly more visible start state
+            "z-50", // High z-index
+            spaceMono.className
+          )}
+        >
+          Saber más
+        </button>
+
         <div className="flex flex-col items-center gap-2 animate-bounce opacity-20 hover:opacity-100 transition-opacity duration-500">
           <span className={cn("text-[10px] uppercase tracking-widest", spaceMono.className)}>Scroll</span>
           <ArrowDown className="w-4 h-4" />

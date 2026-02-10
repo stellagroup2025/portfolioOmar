@@ -8,9 +8,9 @@ export function SocialLinks() {
   const isMobile = useIsMobile()
 
   const socialLinks = [
-    { icon: <Linkedin size={isMobile ? 16 : 14} />, href: "#", label: "LinkedIn" },
-    { icon: <Instagram size={isMobile ? 16 : 14} />, href: "#", label: "Instagram" },
-    { icon: <Github size={isMobile ? 16 : 14} />, href: "#", label: "GitHub" },
+    { icon: <Linkedin size={isMobile ? 16 : 14} />, href: "https://www.linkedin.com/in/omar-somoza-230b71228/", label: "LinkedIn" },
+    { icon: <Instagram size={isMobile ? 16 : 14} />, href: "https://www.instagram.com/omarsomoza1/", label: "Instagram" },
+    { icon: <Github size={isMobile ? 16 : 14} />, href: "https://github.com/omarsomoza", label: "GitHub" },
   ]
 
   const container = {
