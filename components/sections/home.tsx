@@ -50,7 +50,7 @@ export function Home({ onOpenMenu }: HomeProps) {
   // Main Manifesto Content (Clean & Static)
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-between p-6 pt-32 sm:p-12 md:p-16 lg:p-24 overflow-hidden">
+    <div className="relative w-full h-dvh flex flex-col justify-between p-6 pt-20 sm:p-12 md:p-16 lg:p-24 overflow-hidden">
       <OrganicOrderBackground />
 
       {/* Top Bar: Clean & Minimal */}
@@ -115,7 +115,7 @@ export function Home({ onOpenMenu }: HomeProps) {
         <motion.div
           className={cn(
             "flex flex-col gap-12 items-start max-w-4xl",
-            isMobile ? "mt-[50vh]" : "mt-0" // Formula still pushed down on mobile
+            isMobile ? "mt-auto pb-4" : "mt-0" // Use natural flex spacing instead of forced margin
           )}
           variants={item}
         >
@@ -148,7 +148,7 @@ export function Home({ onOpenMenu }: HomeProps) {
 
       {/* Bottom: Scroll Indicator & Menu Trigger */}
       <motion.div
-        className="w-full flex flex-col items-center justify-end z-20 pb-12 gap-6"
+        className="w-full flex flex-col items-center justify-end z-20 pb-12 gap-6 md:hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}

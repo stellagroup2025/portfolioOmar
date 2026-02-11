@@ -67,7 +67,7 @@ export function SocialLinks() {
           key={index}
           href={link.href}
           aria-label={link.label}
-          className="p-1.5 sm:p-2 rounded-full bg-background/80 backdrop-blur-sm border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
+          className="p-1.5 sm:p-2 rounded-full bg-black text-white border border-black/10 hover:bg-black/80 transition-colors"
           variants={item}
           whileHover={{ scale: 1.1, x: 5 }}
           whileTap={{ scale: 0.9 }}
