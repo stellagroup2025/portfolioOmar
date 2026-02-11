@@ -1,13 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { Playfair_Display } from "next/font/google"
+import { Playfair_Display, Space_Mono } from "next/font/google"
 import { Menu, X } from "lucide-react"
 
 // Use Playfair Display as a stylish alternative
 const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "900"],
+})
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
 })
 
 interface NavigationProps {
@@ -107,35 +112,31 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
 
   return (
     <>
-      {/* --- MOBILE NAVIGATION (Visible < md) --- */}
-      <div className="block md:hidden">
-        {/* Toggle Button */}
+      {/* --- MOBILE/OVERLAY NAVIGATION (Overlay visible on all screens if open) --- */}
+      <div>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed top-6 right-4 sm:right-6 z-[60] p-2 text-black bg-white/50 backdrop-blur-sm rounded-full hover:bg-white/80 transition-all focus:outline-none shadow-sm"
+          className={cn(
+            "fixed top-6 right-4 sm:right-6 z-[70] text-black/40 hover:text-black transition-colors focus:outline-none md:hidden", // Added md:hidden back
+            "text-sm font-bold tracking-widest uppercase",
+            spaceMono.className
+          )}
           aria-label="Toggle Menu"
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+          {isOpen ? "CLOSE" : "MENU"}
         </button>
 
-        {/* Mobile Menu Overlay */}
+        {/* Menu Overlay (Visible on all screens when open) */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              className="fixed inset-0 z-40 bg-[#faf9f6]/95 backdrop-blur-md flex flex-col items-center justify-center gap-8"
+              className="fixed inset-0 z-[60] bg-[#faf9f6]/95 backdrop-blur-md flex flex-col items-center justify-center gap-8"
               initial="closed"
               animate={isOpen ? "open" : "closed"}
               exit="closed"
               variants={mobileMenuVariants}
             >
-              {/* Close Button */}
-              <button
-                onClick={() => setIsOpen(false)}
-                className="absolute top-8 right-8 p-2 text-black/60 hover:text-black"
-                aria-label="Close Menu"
-              >
-                <X size={32} />
-              </button>
+              {/* Close Button Removed - Handled by Toggle Button */}
 
               <nav className="flex flex-col items-center gap-8">
                 {navItems.map((item) => (
@@ -186,18 +187,25 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
                 onFocus={() => setRevealedCount(4)}
                 className={cn(
                   "text-5xl md:text-6xl lg:text-7xl xl:text-[6.5rem] font-bold tracking-tight italic block text-right leading-none outline-none",
-                  "transition-all ease-in-out duration-[2500ms]", // Smooth 2.5s transition
+                  "transition-all ease-in-out", // Base transition props
                   playfair.className,
 
-                  // 1. Visible active state (Always full opacity)
-                  isActive ? "text-black opacity-100 scale-105" : "",
+                  // Dynamic Duration: Fast on interaction, Slow on reveal
+                  (isHovered || isActive) ? "duration-500" : "duration-[2500ms]",
 
-                  // 2. Inactive states logic
+                  // 1. Active State
+                  isActive
+                    ? "text-black opacity-100 scale-105 -translate-x-8"
+                    : "",
+
+                  // 2. Inactive States
                   !isActive && [
-                    // If hovered, stronger visibility
-                    isHovered ? "opacity-80 text-black scale-100" : "",
+                    // Hover State
+                    isHovered
+                      ? "opacity-80 text-black scale-100 -translate-x-4"
+                      : "translate-x-0", // Reset translate if not hovered
 
-                    // If not hovered, check revealed state
+                    // Reveal State (if not hovered)
                     !isHovered && (isRevealed ? "text-black opacity-50 motion-reduce:opacity-50" : "text-black opacity-10")
                   ]
                 )}

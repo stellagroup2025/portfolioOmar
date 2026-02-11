@@ -101,35 +101,26 @@ export function Home({ onOpenMenu, onNavigate }: HomeProps) {
           )}
         </motion.h1>
 
-        {/* Mobile: Strategy/Tech Text - Visible immediately below headline */}
-        {isMobile && (
-          <motion.div variants={item} className="mt-12 block md:hidden">
-            <p className={cn(
-              "text-xs font-bold tracking-[0.15em] uppercase text-black/60",
-              spaceMono.className
-            )}>
-              Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo de Producto
-            </p>
-          </motion.div>
-        )}
+        {/* Mobile: Strategy/Tech Text - REMOVED to reduce clutter as requested */}
+        {/* Previously lines 105-114 */}
 
         <motion.div
           className={cn(
             "flex flex-col gap-12 items-start max-w-4xl",
-            isMobile ? "mt-auto pb-4" : "mt-0" // Use natural flex spacing instead of forced margin
+            isMobile ? "mt-12 pb-4" : "mt-0" // Use fixed Mt-12 (3rem)
           )}
           variants={item}
         >
           {/* The Formula */}
           <div className="space-y-2">
             <h2 className={cn(
-              "text-xl md:text-3xl text-black/85 font-normal leading-relaxed tracking-wide",
+              "text-base md:text-3xl text-black/85 font-normal leading-relaxed tracking-wide whitespace-nowrap", // Reduced mobile size to text-base, added whitespace-nowrap
               spaceMono.className
             )}>
-              <span className="opacity-60">Idea</span> <span className="mx-2 opacity-90">↔</span> <span className="opacity-100">Forma</span>
-              <span className="mx-2 md:mx-4 opacity-50">+</span>
+              <span className="opacity-60">Idea</span> <span className="mx-1 md:mx-2 opacity-90">↔</span> <span className="opacity-100">Forma</span>
+              <span className="mx-1 md:mx-4 opacity-50">+</span>
               <span className="opacity-70">Tiempo</span>
-              <span className="mx-2 md:mx-4 opacity-50">=</span>
+              <span className="mx-1 md:mx-4 opacity-50">=</span>
               <span className="border-b border-black/30 pb-1">Crecimiento</span>
             </h2>
           </div>
@@ -179,7 +170,7 @@ export function Home({ onOpenMenu, onNavigate }: HomeProps) {
             }}
             aria-hidden
           >
-            {Array.from("SABER MÁS").map((char, index) => (
+            {Array.from("MÁS SECCIONES →").map((char, index) => (
               <motion.span
                 key={index}
                 variants={{

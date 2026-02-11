@@ -15,6 +15,13 @@ import { Logo } from "@/components/logo";
 import { PageTransition } from "@/components/page-transition";
 import { SectionLink } from "@/components/section-link";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Space_Mono } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("home");
@@ -77,12 +84,54 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-screen overflow-hidden text-black  aaaa">
-      <header className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-4">
+      <header className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-6">
         <div className="flex items-center justify-between">
-          <Logo onClick={() => handleSectionChange("home")} />
+          <div className="flex items-center gap-4 md:gap-6">
+            <Logo onClick={() => handleSectionChange("home")} />
 
-          <div className="flex items-center gap-3 sm:gap-4">
-            <LanguageToggle />
+            <AnimatePresence>
+              {activeSection !== "home" && (
+                <motion.button
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  onClick={() => handleSectionChange("home")}
+                  className={cn(
+                    "flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-black/40 hover:text-black transition-colors ml-4", // Added margin-left
+                    spaceMono.className
+                  )}
+                >
+                  <span className="text-lg leading-none mb-0.5">←</span>
+                  <span className="mt-0.5">Inicio</span>
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Section Indicator (Right) */}
+          <div className="flex items-center">
+            <AnimatePresence mode="wait">
+              <motion.button
+                key={activeSection}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.2 }}
+                onClick={() => setIsMenuOpen(true)}
+                className={cn(
+                  "text-sm md:text-xl font-bold tracking-widest text-black/40 hover:text-black uppercase block cursor-pointer transition-colors", // Mobile: text-sm, Desktop: text-xl, added hover
+                  spaceMono.className
+                )}
+              >
+                {activeSection === 'home' ? '' : (
+                  activeSection === 'approach' ? 'THINKING' :
+                    activeSection === 'work' ? 'WORK' :
+                      activeSection === 'about' ? 'ABOUT' :
+                        activeSection === 'contact' ? 'CONTACT' :
+                          activeSection.toUpperCase()
+                )}
+              </motion.button>
+            </AnimatePresence>
           </div>
         </div>
       </header>

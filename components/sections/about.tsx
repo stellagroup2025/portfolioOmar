@@ -42,7 +42,7 @@ export function About() {
   };
 
   return (
-    <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden p-6 pt-20 md:p-12">
+    <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden px-6 pb-6 pt-32 md:px-12 md:pb-12 md:pt-40">
 
       {/* BACKGROUND */}
       <StructureBackground />
@@ -60,9 +60,9 @@ export function About() {
                 initial="hidden"
                 animate="show"
                 exit="exit"
-                className="w-full max-w-4xl flex flex-col md:flex-row items-center gap-8 md:gap-16"
+                className="w-full max-w-5xl flex flex-col md:flex-row items-start gap-8 md:gap-12"
               >
-                <div className="flex-1 space-y-6 md:space-y-8">
+                <div className="flex-1 space-y-6 md:space-y-8 pt-2">
                   <span className={cn("text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
                     01 Quién soy
                   </span>
@@ -84,13 +84,13 @@ export function About() {
                   </button>
                 </div>
 
-                {/* Image Profile */}
-                <div className="relative w-48 h-48 md:w-80 md:h-80 grayscale opacity-90 hover:opacity-100 transition-opacity duration-700 mix-blend-multiply flex-shrink-0">
+                {/* Image Profile - Aligned top with name (skipping label via margin-top) */}
+                <div className="relative w-56 h-72 md:w-80 md:h-96 grayscale opacity-90 hover:opacity-100 transition-opacity duration-700 mix-blend-multiply flex-shrink-0 md:mt-14 rounded-lg overflow-hidden">
                   <Image
                     src="/omardubai.png"
                     alt="Omar Somoza"
                     fill
-                    className="rounded-full md:rounded-sm object-cover shadow-2xl shadow-black/5"
+                    className="object-cover"
                     priority
                   />
                 </div>
@@ -195,16 +195,16 @@ export function About() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as Tab)}
                 className={cn(
-                  "text-xs md:text-sm tracking-widest uppercase transition-all duration-300 relative py-2",
+                  "text-sm md:text-base tracking-widest uppercase transition-all duration-300 relative py-3 px-2",
                   spaceMono.className,
-                  activeTab === tab.id ? "text-black font-bold" : "text-black/30 hover:text-black/60"
+                  activeTab === tab.id ? "text-black font-bold" : "text-black/40 hover:text-black/70"
                 )}
               >
                 {tab.label}
                 {activeTab === tab.id && (
                   <motion.div
                     layoutId="activeAboutTab"
-                    className="absolute bottom-0 left-0 w-full h-px bg-black"
+                    className="absolute bottom-0 left-0 w-full h-[3px] bg-black"
                   />
                 )}
               </button>

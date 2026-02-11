@@ -8,9 +8,10 @@ const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400"] });
 
 interface LogoProps {
   onClick?: () => void;
+  text?: string;
 }
 
-export function Logo({ onClick }: LogoProps) {
+export function Logo({ onClick, text = "Omar Somoza" }: LogoProps) {
   const handleClick = () => {
     if (onClick) {
       onClick();
@@ -26,7 +27,7 @@ export function Logo({ onClick }: LogoProps) {
       )}
       whileTap={{ scale: 0.98 }}
     >
-      Omar Somoza
+      {text}
     </motion.button>
   );
 }

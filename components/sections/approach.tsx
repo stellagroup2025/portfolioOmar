@@ -41,8 +41,6 @@ const systemTypes = [
 
 const principles = [
     "Arquitectura es negocio.",
-    "Escalar es mantener claridad.",
-    "Automatizar > Contratar.",
     "IA con criterio, no por moda.",
     "Reducir fricción, no crearla."
 ];
@@ -69,7 +67,7 @@ export function Approach() {
     };
 
     return (
-        <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-between relative overflow-hidden p-6 pt-24 md:p-12">
+        <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-between relative overflow-hidden px-6 pb-6 pt-32 md:px-12 md:pb-12 md:pt-40">
 
             {/* ABSTRACT BACKGROUND */}
             <ThinkingParticles />
@@ -162,11 +160,11 @@ export function Approach() {
                                 <span className={cn("block mb-8 md:mb-12 text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
                                     03 Cómo pienso
                                 </span>
-                                <div className="flex flex-col gap-6 md:gap-8 mb-8">
+                                <div className="flex flex-col gap-10 md:gap-12 mb-12">
                                     {principles.map((p, idx) => (
-                                        <div key={idx} className="flex items-baseline gap-6 border-b border-black/5 pb-4 last:border-0 pl-0">
-                                            <span className="text-xs text-black/20 font-mono">0{idx + 1}</span>
-                                            <h3 className={cn("text-xl md:text-4xl text-black/80 font-normal", playfair.className)}>
+                                        <div key={idx} className="flex items-baseline gap-8 border-b border-black/10 pb-8 last:border-0 pl-0">
+                                            <span className="text-sm md:text-base text-black/40 font-mono font-bold">0{idx + 1}</span>
+                                            <h3 className={cn("text-2xl md:text-4xl text-black/90 font-normal leading-tight", playfair.className)}>
                                                 {p}
                                             </h3>
                                         </div>
