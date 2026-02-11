@@ -49,7 +49,7 @@ export default function Portfolio() {
   }, [activeSection]);
 
   const sections = {
-    home: <Home onOpenMenu={() => setIsMenuOpen(true)} />,
+    home: <Home onOpenMenu={() => setIsMenuOpen(true)} onNavigate={handleSectionChange} />,
     approach: <Approach />,
     work: (
       <Work
@@ -115,14 +115,20 @@ export default function Portfolio() {
       </div>
 
       {/* Footer con posicionamiento condicional */}
+      {/* Footer con posicionamiento condicional */}
       <footer
         className={
           isMobile
-            ? "fixed bottom-4 left-0 w-full z-40 px-6"
+            ? "fixed bottom-4 left-0 w-full z-40 px-6 pointer-events-none" // pointer-events-none to avoid blocking if empty
             : "fixed bottom-6 sm:bottom-8 left-4 sm:left-6 w-auto z-40"
         }
       >
-        <SocialLinks />
+        {/* On Mobile: Only show on Home. On Desktop: Always show. */}
+        {(!isMobile || activeSection === 'home') && (
+          <div className="pointer-events-auto">
+            <SocialLinks />
+          </div>
+        )}
       </footer>
     </div>
   );

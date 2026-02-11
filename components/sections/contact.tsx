@@ -31,7 +31,7 @@ export function Contact() {
   };
 
   return (
-    <div className="w-full h-full bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden p-6 md:p-12">
+    <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden p-6 pt-20 md:p-12">
 
       {/* BACKGROUND */}
       <SparkBackground />

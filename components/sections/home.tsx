@@ -19,9 +19,10 @@ const spaceMono = Space_Mono({
 
 interface HomeProps {
   onOpenMenu?: () => void;
+  onNavigate?: (section: string) => void;
 }
 
-export function Home({ onOpenMenu }: HomeProps) {
+export function Home({ onOpenMenu, onNavigate }: HomeProps) {
   const isMobile = useIsMobile();
 
   const container = {
@@ -107,7 +108,7 @@ export function Home({ onOpenMenu }: HomeProps) {
               "text-xs font-bold tracking-[0.15em] uppercase text-black/60",
               spaceMono.className
             )}>
-              Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo
+              Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo de Producto
             </p>
           </motion.div>
         )}
@@ -139,7 +140,7 @@ export function Home({ onOpenMenu }: HomeProps) {
               "text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-black/60",
               spaceMono.className
             )}>
-              Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo
+              Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo de Producto
             </p>
           </div>
 
@@ -147,30 +148,50 @@ export function Home({ onOpenMenu }: HomeProps) {
       </motion.div>
 
       {/* Bottom: Scroll Indicator & Menu Trigger */}
+      {/* Bottom: Menu Trigger (Mobile Only) */}
+      {/* Bottom: Menu Trigger (Mobile Only) */}
       <motion.div
         className="w-full flex flex-col items-center justify-end z-20 pb-12 gap-6 md:hidden"
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1 }}
       >
         {/* Subtle Menu Trigger - Mobile Only (CSS controlled) */}
         <button
           onClick={onOpenMenu}
           className={cn(
-            "block md:hidden", // Visible on mobile, hidden on desktop
-            "text-[10px] uppercase tracking-[0.3em] font-medium transition-all duration-500 p-4",
-            "text-black/40 hover:text-black", // Slightly more visible start state
-            "z-50", // High z-index
+            "block md:hidden",
+            "text-xs uppercase tracking-[0.3em] font-medium p-4", // Increased size to text-xs, reduced weight to font-medium
+            "text-black hover:text-black/70",
+            "z-50",
             spaceMono.className
           )}
         >
-          Saber más
+          <motion.span
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.1,
+                  delayChildren: 1, // Reduced delay to 1s
+                }
+              }
+            }}
+            aria-hidden
+          >
+            {Array.from("SABER MÁS").map((char, index) => (
+              <motion.span
+                key={index}
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1 }
+                }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            ))}
+          </motion.span>
         </button>
-
-        <div className="flex flex-col items-center gap-2 animate-bounce opacity-20 hover:opacity-100 transition-opacity duration-500">
-          <span className={cn("text-[10px] uppercase tracking-widest", spaceMono.className)}>Scroll</span>
-          <ArrowDown className="w-4 h-4" />
-        </div>
       </motion.div>
     </div>
   );

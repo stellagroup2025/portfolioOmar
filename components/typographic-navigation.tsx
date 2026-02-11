@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Playfair_Display } from "next/font/google"
@@ -64,90 +64,114 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
   // Si estamos en la página de inicio, mostramos la navegación
   if (activeSection !== "home") return null;
 
+  // Variants for desktop container
+  const desktopContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 1.5, // 1.5s delay for desktop
+        duration: 1.5
+      }
+    }
+  }
+
+  const desktopItemVariants = {
+    hidden: { opacity: 0, x: 20, filter: "blur(5px)" },
+    visible: {
+      opacity: 1,
+      x: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.8 }
+    }
+  }
+
   return (
     <>
       {/* --- MOBILE NAVIGATION (Visible < md) --- */}
       <div className="block md:hidden">
         {/* Toggle Button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="fixed top-6 right-4 sm:right-6 z-[60] p-2 text-black bg-white/50 backdrop-blur-sm rounded-full hover:bg-white/80 transition-all focus:outline-none shadow-sm"
-          aria-label="Toggle Menu"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Controlled by parent (Home) or local state if passed?
+            actually page.tsx controls isOpen.
+            We just render the overlay if isOpen is true.
+            The trigger button is in Home.tsx.
+            Wait, TypographicNavigation also had a toggle button internally in previous versions?
+            Let's keep it simple: This component mainly renders the menu OVERLAY on mobile,
+            and the SIDEBAR on desktop.
+        */}
 
-        {/* Overlay */}
-        <motion.div
-          className="fixed inset-0 z-40 bg-[#faf9f6]/95 backdrop-blur-md flex flex-col items-center justify-center" // removed hidden class logic, handled by variants
-          variants={mobileMenuVariants}
-          initial="closed"
-          animate={isOpen ? "open" : "closed"}
-        >
-          <div className="flex flex-col items-center justify-center space-y-10">
-            {navItems.map((item) => (
-              <motion.button
-                key={item.id}
-                onClick={() => {
-                  if (!isTransitioning) {
-                    setActiveSection(item.id);
-                    setIsOpen(false);
-                  }
-                }}
-                className={cn(
-                  "text-5xl font-black tracking-wide italic text-black", // Removed pointer-events-auto
-                  playfair.className,
-                )}
-                whileTap={{ scale: 0.95 }}
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              className="fixed inset-0 bg-[#faf9f6]/95 z-40 flex flex-col items-center justify-center gap-8"
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={mobileMenuVariants}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-8 right-8 p-2 text-black/60 hover:text-black"
+                aria-label="Close Menu"
               >
-                {item.label}
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
+                <X size={32} />
+              </button>
+
+              <nav className="flex flex-col items-center gap-8">
+                {navItems.map((item) => (
+                  <motion.button
+                    key={item.id}
+                    onClick={() => {
+                      setActiveSection(item.id);
+                      setIsOpen(false);
+                    }}
+                    className={cn(
+                      "text-4xl font-light tracking-wide text-black/80 hover:text-black transition-colors italic",
+                      playfair.className,
+                      activeSection === item.id && "font-medium text-black"
+                    )}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item.label}
+                  </motion.button>
+                ))}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* --- DESKTOP NAVIGATION (Visible >= md) --- */}
-      <motion.div
-        className="hidden md:flex absolute top-0 right-0 w-full h-full items-center justify-center pointer-events-none"
-        variants={containerVariants}
+      {/* --- DESKTOP NAVIGATION (Visible >= md) --- */}
+      <motion.nav
+        className="fixed right-12 xl:right-24 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col items-end gap-6 pointer-events-none"
         initial="hidden"
         animate="visible"
+        variants={desktopContainerVariants}
       >
-        <div className="relative w-full h-full flex items-center justify-center">
-          {navItems.map((item, index) => (
-            <motion.div
-              key={item.id}
-              className="absolute"
-              variants={itemVariants}
-              style={{
-                right: "5%",
-                top: `${15 + index * 14}%`,
-              }}
+        {navItems.map((item) => (
+          <motion.div key={item.id} className="relative pointer-events-auto" variants={desktopItemVariants}>
+            <button
+              onClick={() => setActiveSection(item.id)}
+              onMouseEnter={() => setHoveredItem(item.id)}
+              onMouseLeave={() => setHoveredItem(null)}
+              className={cn(
+                "text-5xl md:text-6xl lg:text-7xl xl:text-[6.5rem] font-bold tracking-tight italic transition-all duration-700 block text-right leading-none",
+                (activeSection === item.id || hoveredItem === item.id)
+                  ? "text-black opacity-100 scale-105"
+                  : "text-black/5 hover:text-black/20 blur-[0.5px] hover:blur-0",
+                playfair.className
+              )}
             >
-              <motion.button
-                onClick={() => !isTransitioning && setActiveSection(item.id)}
-                onMouseEnter={() => setHoveredItem(item.id)}
-                onMouseLeave={() => setHoveredItem(null)}
-                className={cn(
-                  "text-4xl md:text-5xl lg:text-6xl xl:text-[5rem] font-bold tracking-wide pointer-events-auto relative italic transition-all duration-500",
-                  hoveredItem === item.id ? "text-black opacity-100 scale-105" : "text-black/5 hover:text-black/20",
-                  playfair.className,
-                )}
-                whileHover={{ x: -10 }}
-                disabled={isTransitioning}
-              >
-                <motion.span className="inline-block relative">
-                  {item.label}
-                </motion.span>
-              </motion.button>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+              {item.label}
+            </button>
+          </motion.div>
+        ))}
+      </motion.nav>
     </>
   )
-
-  // Para las demás secciones, no mostramos la navegación tipográfica
-  return null
 }

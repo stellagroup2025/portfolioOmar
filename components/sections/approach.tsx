@@ -69,7 +69,7 @@ export function Approach() {
     };
 
     return (
-        <div className="w-full h-full bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden p-6 md:p-12">
+        <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-between relative overflow-hidden p-6 pt-24 md:p-12">
 
             {/* ABSTRACT BACKGROUND */}
             <ThinkingParticles />

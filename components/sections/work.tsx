@@ -11,7 +11,12 @@ import { Badge } from "@/components/ui/badge"
 const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600"] })
 const spaceMono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"] })
 
-export function Work() {
+interface WorkProps {
+  activeProject?: string | null;
+  setActiveProject?: (projectId: string | null) => void;
+}
+
+export function Work({ activeProject, setActiveProject }: WorkProps) {
   const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState<string>('fintech-erp')
 
@@ -73,7 +78,7 @@ export function Work() {
   const nextProject = caseStudies[(currentIndex + 1) % caseStudies.length]
 
   return (
-    <div className="w-full h-full bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden p-6 md:p-12">
+    <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden p-6 pt-20 md:p-12">
 
       {/* BACKGROUND */}
       <ThinkingParticles />
