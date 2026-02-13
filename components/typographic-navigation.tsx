@@ -15,35 +15,41 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
 })
 
-interface NavigationProps {
-  activeSection: string
-  setActiveSection: (section: string) => void
-  isTransitioning: boolean
-  isMobile: boolean
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean) => void
+interface TypographicNavigationProps {
+  activeSection: string;
+  setActiveSection: (section: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  isInitialLoad?: boolean;
+  isTransitioning?: boolean; // Restored prop
 }
 
-export function TypographicNavigation({ activeSection, setActiveSection, isTransitioning, isMobile, isOpen, setIsOpen }: NavigationProps) {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-
-  // State for delayed visibility (Staggered 2s start, 1 by 1)
+export function TypographicNavigation({
+  activeSection,
+  setActiveSection,
+  isOpen,
+  setIsOpen,
+  isInitialLoad = false,
+  isTransitioning = false,
+}: TypographicNavigationProps) {
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [revealedCount, setRevealedCount] = useState(0);
 
   useEffect(() => {
-    // Start revealing after 2000ms
-    const timer1 = setTimeout(() => setRevealedCount(1), 2000);
-    const timer2 = setTimeout(() => setRevealedCount(2), 2400); // +400ms
-    const timer3 = setTimeout(() => setRevealedCount(3), 2800); // +400ms
-    const timer4 = setTimeout(() => setRevealedCount(4), 3200); // +400ms
+    // If initial load, wait for full choreography (approx 7.5s)
+    // If returning, quick fade in (0.5s)
+    const delayTime = isInitialLoad ? 7500 : 500;
 
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(timer4);
-    };
-  }, []);
+    const timer = setTimeout(() => {
+      // Staggered reveal
+      setRevealedCount(1);
+      setTimeout(() => setRevealedCount(2), 400);
+      setTimeout(() => setRevealedCount(3), 800);
+      setTimeout(() => setRevealedCount(4), 1200);
+    }, delayTime);
+
+    return () => clearTimeout(timer);
+  }, [isInitialLoad]);
 
   const navItems = [
     { id: "approach", label: "Thinking" },
@@ -112,29 +118,45 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
 
   return (
     <>
-      {/* --- MOBILE/OVERLAY NAVIGATION (Overlay visible on all screens if open) --- */}
-      <div>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className={cn(
-            "fixed top-6 right-4 sm:right-6 z-[70] text-black/40 hover:text-black transition-colors focus:outline-none md:hidden", // Added md:hidden back
-            "text-sm font-bold tracking-widest uppercase",
-            spaceMono.className
-          )}
-          aria-label="Toggle Menu"
-        >
-          {isOpen ? "CLOSE" : "MENU"}
-        </button>
+      {/* --- MOBILE/OVERLAY NAVIGATION --- */}
+      {/* Toggle Button (Hamburger / Close) */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-8 right-8 z-[60] p-2 hover:bg-black/5 rounded-full transition-colors 2xl:hidden pointer-events-auto"
+            onClick={() => setIsOpen(true)}
+            aria-label="Menu"
+          >
+            <Menu className="w-6 h-6" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
-        {/* Menu Overlay (Visible on all screens when open) */}
-        <AnimatePresence>
-          {isOpen && (
+      {/* --- MOBILE OVERLAY --- */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 bg-white/95 backdrop-blur-sm z-[55] flex flex-col items-center justify-center pointer-events-auto 2xl:hidden"
+          >
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-8 right-8 p-2 hover:bg-black/5 rounded-full transition-colors"
+            >
+              <X className="w-8 h-8" />
+            </button>
+
             <motion.div
-              className="fixed inset-0 z-[60] bg-[#faf9f6]/95 backdrop-blur-md flex flex-col items-center justify-center gap-8"
-              initial="closed"
-              animate={isOpen ? "open" : "closed"}
-              exit="closed"
-              variants={mobileMenuVariants}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-col items-center gap-12"
             >
               {/* Close Button Removed - Handled by Toggle Button */}
 
@@ -160,17 +182,16 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
                 ))}
               </nav>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* --- DESKTOP NAVIGATION (Visible >= md) --- */}
-      {/* --- DESKTOP NAVIGATION (Visible >= md) --- */}
+      {/* --- DESKTOP NAVIGATION (Visible >= 2xl) --- */}
       <nav
-        className="fixed right-12 xl:right-24 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col items-end gap-6 pointer-events-none"
-      // initial="hidden"
-      // animate="visible"
-      // variants={desktopContainerVariants}
+        className={cn(
+          "fixed right-12 xl:right-24 top-1/2 -translate-y-1/2 z-50 hidden 2xl:flex flex-col items-end gap-6 pointer-events-none transition-opacity duration-1000",
+          (isInitialLoad && revealedCount === 0) ? "opacity-0" : "opacity-100" // Completely invisible until timer hits
+        )}
       >
         {navItems.map((item, index) => {
           const isActive = activeSection === item.id;
@@ -190,23 +211,25 @@ export function TypographicNavigation({ activeSection, setActiveSection, isTrans
                   "transition-all ease-in-out", // Base transition props
                   playfair.className,
 
-                  // Dynamic Duration: Fast on interaction, Slow on reveal
-                  (isHovered || isActive) ? "duration-500" : "duration-[2500ms]",
+                  // Dynamic Duration: Fast on reveal/interact, slow only for subtle effects later if needed
+                  // Increased to 1500ms for subtle blending
+                  (isHovered || isActive) ? "duration-500" : "duration-[1500ms]",
 
                   // 1. Active State
                   isActive
-                    ? "text-black opacity-100 scale-105 -translate-x-8"
+                    ? "text-black opacity-100 scale-105 -translate-x-8 blur-0"
                     : "",
 
                   // 2. Inactive States
                   !isActive && [
                     // Hover State
                     isHovered
-                      ? "opacity-80 text-black scale-100 -translate-x-4"
+                      ? "opacity-80 text-black scale-100 -translate-x-4 blur-0"
                       : "translate-x-0", // Reset translate if not hovered
 
                     // Reveal State (if not hovered)
-                    !isHovered && (isRevealed ? "text-black opacity-50 motion-reduce:opacity-50" : "text-black opacity-10")
+                    // Added blur transition: starts blurry and focused as it appears
+                    !isHovered && (isRevealed ? "text-black opacity-50 blur-0" : "text-black opacity-0 blur-sm")
                   ]
                 )}
               >

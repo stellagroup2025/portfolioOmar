@@ -28,6 +28,7 @@ export default function Portfolio() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [activeProject, setActiveProject] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true); // Control for entrance choreography
   const isMobile = useIsMobile();
 
   const handleSectionChange = (section: string) => {
@@ -35,12 +36,19 @@ export default function Portfolio() {
       setIsTransitioning(true);
       setActiveSection(section);
 
+      // If leaving home, initial load sequence is done
+      if (activeSection === 'home') {
+        setIsInitialLoad(false);
+      }
+
       // Reset active project when changing sections
       if (section !== "work") {
         setActiveProject(null);
       }
     }
   };
+
+  // ... (handleProjectChange same as before) 
 
   // Function to set active project (will be passed to Work component)
   const handleProjectChange = (projectId: string | null) => {
@@ -56,7 +64,7 @@ export default function Portfolio() {
   }, [activeSection]);
 
   const sections = {
-    home: <Home onOpenMenu={() => setIsMenuOpen(true)} onNavigate={handleSectionChange} />,
+    home: <Home onOpenMenu={() => setIsMenuOpen(true)} onNavigate={handleSectionChange} isInitialLoad={isInitialLoad} />,
     approach: <Approach />,
     work: (
       <Work
@@ -67,6 +75,8 @@ export default function Portfolio() {
     about: <About />,
     contact: <Contact />,
   };
+
+  // ... (shouldShowSectionLink logic logic)
 
   // Determinar qué sección debe tener el enlace de navegación
   const shouldShowSectionLink = activeSection !== "home";
@@ -87,7 +97,13 @@ export default function Portfolio() {
       <header className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4 md:gap-6">
-            <Logo onClick={() => handleSectionChange("home")} />
+            <motion.div
+              initial={isInitialLoad ? { opacity: 0 } : { opacity: 1 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }} // Phase 2: Logo Reveal (600ms delay, 800ms duration)
+            >
+              <Logo onClick={() => handleSectionChange("home")} />
+            </motion.div>
 
             <AnimatePresence>
               {activeSection !== "home" && (
@@ -113,10 +129,14 @@ export default function Portfolio() {
             <AnimatePresence mode="wait">
               <motion.button
                 key={activeSection}
-                initial={{ opacity: 0, y: -10 }}
+                initial={isInitialLoad ? { opacity: 0 } : { opacity: 0, y: -10 }} // Phase 6: Nav Reveal (0 opacity initially)
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.2 }}
+                transition={
+                  isInitialLoad && activeSection === 'home'
+                    ? { delay: 6.5, duration: 1.0, ease: "easeOut" } // Phase 6: Late reveal for Home (6.5s delay)
+                    : { duration: 0.2 } // Standard transition for navigation
+                }
                 onClick={() => setIsMenuOpen(true)}
                 className={cn(
                   "text-sm md:text-xl font-bold tracking-widest text-black/40 hover:text-black uppercase block cursor-pointer transition-colors", // Mobile: text-sm, Desktop: text-xl, added hover
@@ -156,10 +176,10 @@ export default function Portfolio() {
         <TypographicNavigation
           activeSection={activeSection}
           setActiveSection={handleSectionChange}
-          isTransitioning={isTransitioning}
-          isMobile={isMobile}
           isOpen={isMenuOpen}
           setIsOpen={setIsMenuOpen}
+          isInitialLoad={isInitialLoad}
+          isTransitioning={isTransitioning}
         />
       </div>
 

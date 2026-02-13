@@ -3,8 +3,18 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
-export function OrganicOrderBackground() {
+interface OrganicOrderBackgroundProps {
+    startAnimation?: boolean;
+}
+
+export function OrganicOrderBackground({ startAnimation = true }: OrganicOrderBackgroundProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const startAnimationRef = useRef(startAnimation);
+
+    // Update ref when prop changes
+    useEffect(() => {
+        startAnimationRef.current = startAnimation;
+    }, [startAnimation]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -58,12 +68,12 @@ export function OrganicOrderBackground() {
                 y: Math.random() * height,
                 targetX: targetCol * gridSize + gridSize / 2, // Center in cell
                 targetY: targetRow * gridSize + gridSize / 2,
-                vx: (Math.random() - 0.5) * 0.5, // Slow random drift
-                vy: (Math.random() - 0.5) * 0.5,
+                vx: (Math.random() - 0.5) * 0.2, // Very slow drift for Phase 1
+                vy: (Math.random() - 0.5) * 0.2,
                 size: Math.random() * 1.5 + 0.5, // Tiny points
-                opacity: Math.random() * 0.3 + 0.1, // Very subtle
+                opacity: Math.random() * 0.2 + 0.1, // Slightly more visible (0.1 - 0.3)
                 state: "chaos",
-                timer: Math.random() * 200 + 100 // Delay before finding form
+                timer: Math.random() * 100 + 50 // Shorter initial delay (50-150 frames)
             });
         }
 
@@ -78,13 +88,17 @@ export function OrganicOrderBackground() {
                 if (p.state === "chaos") {
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.timer--;
+
+                    // Respond quickly once animation starts (accelerated countdown)
+                    if (startAnimationRef.current) {
+                        p.timer -= 5; // Much faster transition (was 1)
+                    }
 
                     // Boundary bounce for chaos
                     if (p.x < 0 || p.x > width) p.vx *= -1;
                     if (p.y < 0 || p.y > height) p.vy *= -1;
 
-                    if (p.timer <= 0) p.state = "forming";
+                    if (p.timer <= 0 && startAnimationRef.current) p.state = "forming";
                 }
 
                 // 2. FORMING: Soft attraction to grid target
@@ -98,14 +112,14 @@ export function OrganicOrderBackground() {
                         p.vy += dy * 0.0005;
 
                         // Damping
-                        p.vx *= 0.96;
-                        p.vy *= 0.96;
+                        p.vx *= 0.94; // Increased damping slightly to settle faster
+                        p.vy *= 0.94;
 
                         p.x += p.vx;
                         p.y += p.vy;
 
-                        // Check if roughly "docked"
-                        if (Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(p.vx) < 0.1) {
+                        // Check if roughly "docked" - Relaxed conditions
+                        if (Math.abs(dx) < 5 && Math.abs(dy) < 5 && Math.abs(p.vx) < 1) {
                             p.state = "growth";
                         }
                     }
@@ -113,16 +127,19 @@ export function OrganicOrderBackground() {
 
                 // 3. GROWTH: Gentle upward flow with structure
                 else if (p.state === "growth") {
-                    // Move strictly upward, very slowly, reinforcing vertical growth
-                    p.y -= 0.1;
+                    // Move strictly upward, slightly faster to be noticeable
+                    p.y -= 0.5; // Increased from 0.1 to 0.5
                     // Correct x to stay perfectly aligned (vertical structure)
                     if (p.targetX !== null) p.x += (p.targetX - p.x) * 0.1;
 
                     // Reset if goes off top
                     if (p.y < -10) {
                         p.y = height + 10;
-                        p.state = "chaos"; // Recycle into chaos
-                        p.timer = Math.random() * 100;
+                        // Keep in growth state for continuous flow, or occasional chaos
+                        if (Math.random() > 0.9) {
+                            p.state = "chaos";
+                            p.timer = Math.random() * 100;
+                        }
                     }
                 }
 
@@ -133,19 +150,17 @@ export function OrganicOrderBackground() {
                 // Dynamic opacity based on state
                 // Chaos = faint, Form = pulsing, Growth = stable
                 let alpha = p.opacity;
-                if (p.state === "forming") alpha = p.opacity * 1.5; // Slightly brighter when finding form
+                if (p.state === "forming") alpha = p.opacity * 1.5;
 
                 ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
                 ctx.fill();
 
                 // Draw faint connections if forming/growth and close neighbors (Structure hint)
-                // Optimization: only check a few neighbors or use grid proximity
-                // For performance/subtlety, maybe just draw vertically from p.y to p.y+10 in growth
                 if (p.state === "growth") {
                     ctx.beginPath();
                     ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(p.x, p.y + 10); // Slight trail implies upward movement
-                    ctx.strokeStyle = `rgba(0,0,0, ${alpha * 0.5})`;
+                    ctx.lineTo(p.x, p.y + 15); // Longer trail implies faster upward movement
+                    ctx.strokeStyle = `rgba(0,0,0, ${alpha * 0.4})`; // Subtle trail
                     ctx.stroke();
                 }
             });
