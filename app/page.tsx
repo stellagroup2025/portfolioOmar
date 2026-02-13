@@ -28,6 +28,7 @@ export default function Portfolio() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [activeProject, setActiveProject] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuSource, setMenuSource] = useState<'header' | 'hero_cta'>('header'); // Track where menu was opened from
   const [isInitialLoad, setIsInitialLoad] = useState(true); // Control for entrance choreography
   const isMobile = useIsMobile();
 
@@ -64,7 +65,7 @@ export default function Portfolio() {
   }, [activeSection]);
 
   const sections = {
-    home: <Home onOpenMenu={() => setIsMenuOpen(true)} onNavigate={handleSectionChange} isInitialLoad={isInitialLoad} />,
+    home: <Home onOpenMenu={() => { setMenuSource('hero_cta'); setIsMenuOpen(true); }} onNavigate={handleSectionChange} isInitialLoad={isInitialLoad} />,
     approach: <Approach />,
     work: (
       <Work
@@ -180,6 +181,8 @@ export default function Portfolio() {
           setIsOpen={setIsMenuOpen}
           isInitialLoad={isInitialLoad}
           isTransitioning={isTransitioning}
+          menuSource={menuSource}
+          onHeaderOpen={() => setMenuSource('header')}
         />
       </div>
 

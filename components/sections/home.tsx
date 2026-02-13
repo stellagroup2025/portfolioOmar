@@ -6,7 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { OrganicOrderBackground } from "@/components/organic-order-background";
 import { Playfair_Display, Space_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -74,9 +74,9 @@ export function Home({ onOpenMenu, onNavigate, isInitialLoad = false }: HomeProp
         setStartParticles(true);
       }, 5500); // Delayed to wait for slower typing
 
-      // Phase 7: Welcome Message (9.5s -> 13.5s)
-      const timerWelcomeShow = setTimeout(() => setShowWelcome(true), 9500);
-      const timerWelcomeHide = setTimeout(() => setShowWelcome(false), 13500); // Extended duration (4s total)
+      // Phase 7: Welcome Message (10.5s -> 14.5s)
+      const timerWelcomeShow = setTimeout(() => setShowWelcome(true), 10500);
+      const timerWelcomeHide = setTimeout(() => setShowWelcome(false), 14500); // Extended duration (4s total)
 
       return () => {
         clearTimeout(timer);
@@ -133,9 +133,9 @@ export function Home({ onOpenMenu, onNavigate, isInitialLoad = false }: HomeProp
           initial="hidden"
           animate="show"
           custom={1.4} // Sync with first headline line
-          className="mb-12"
+          className="mb-12 text-center md:text-left"
         >
-          <span className="block text-sm md:text-base tracking-[0.25em] uppercase text-black/40 font-medium">
+          <span className="block w-full md:w-auto text-sm md:text-base tracking-[0.25em] uppercase text-black/40 font-medium">
             Principio 01
           </span>
         </motion.div>
@@ -143,64 +143,122 @@ export function Home({ onOpenMenu, onNavigate, isInitialLoad = false }: HomeProp
         {/* Phase 3: Headline (Typewriter Effect) */}
         <h1 className={cn(
           "font-light tracking-tight text-black mb-0 md:mb-16",
-          isMobile ? "text-[2.5rem] leading-[1.15]" : "text-[3.25rem] md:text-[4rem] lg:text-[4.2rem] leading-[0.98]",
+          "text-[2.5rem] leading-[1.15] md:text-[3.25rem] lg:text-[4rem] xl:text-[4.2rem] md:leading-[0.98]",
           playfair.className
         )}
           aria-label="Cuando las ideas encuentran forma, el crecimiento es natural."
         >
-          {isMobile ? (
-            <div className="flex flex-col items-start">
-              {/* Mobile Delays calculated for 0.07s/char */}
-              <TypewriterLine text="Cuando las ideas" delay={1.4} className="block" isInitialLoad={isInitialLoad} />
-              <TypewriterLine text="encuentran forma," delay={2.6} className="block" isInitialLoad={isInitialLoad} />
-              <TypewriterLine text="el crecimiento es natural." delay={3.9} className="opacity-90 mt-4 block" isInitialLoad={isInitialLoad} />
-            </div>
-          ) : (
-            <div className="flex flex-col items-start">
-              {/* Desktop Delays calculated for 0.07s/char */}
-              <TypewriterLine text="Cuando las ideas encuentran" delay={1.4} className="block" isInitialLoad={isInitialLoad} />
-              <TypewriterLine text="forma," delay={3.4} className="block" isInitialLoad={isInitialLoad} />
-              <TypewriterLine text="el crecimiento es natural." delay={4.0} className="opacity-90 block" isInitialLoad={isInitialLoad} />
-            </div>
-          )}
+          {/* Mobile Layout */}
+          <div className="flex flex-col items-center md:hidden">
+            {/* Mobile Delays calculated for 0.07s/char */}
+            <TypewriterLine text="Cuando las ideas" delay={2.4} className="block" isInitialLoad={isInitialLoad} />
+            <TypewriterLine text="encuentran forma," delay={3.6} className="block" isInitialLoad={isInitialLoad} />
+            <TypewriterLine text="el crecimiento es natural." delay={4.9} className="opacity-90 block" isInitialLoad={isInitialLoad} />
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden md:flex flex-col items-start">
+            {/* Desktop Delays calculated for 0.07s/char */}
+            <TypewriterLine text="Cuando las ideas encuentran" delay={2.4} className="block" isInitialLoad={isInitialLoad} />
+            <TypewriterLine text="forma," delay={4.4} className="block" isInitialLoad={isInitialLoad} />
+            <TypewriterLine text="el crecimiento es natural." delay={5.0} className="opacity-90 block" isInitialLoad={isInitialLoad} />
+          </div>
         </h1>
 
-        {/* Phase 5: Formula (6000ms) */}
-        <motion.div
+        {/* Phase 5: Formula (Sequential Reveal) */}
+        <div
           className={cn(
-            "flex flex-col gap-12 items-start max-w-4xl",
-            isMobile ? "mt-12 pb-4" : "mt-0"
+            "flex flex-col gap-12 items-center md:items-start max-w-4xl",
+            "mt-12 pb-4 md:mt-0 md:pb-0"
           )}
-          variants={fadeInUp}
-          initial="hidden"
-          animate="show"
-          custom={6.0} // Sync after typing roughly finishes
         >
           {/* The Formula */}
           <div className="space-y-2">
             <h2 className={cn(
-              "text-base md:text-3xl text-black/85 font-normal leading-relaxed tracking-wide whitespace-nowrap", // Reduced mobile size to text-base, added whitespace-nowrap
+              "text-base md:text-3xl text-black/85 font-normal leading-relaxed tracking-wide whitespace-nowrap text-center md:text-left",
               spaceMono.className
             )}>
-              <span className="opacity-60">Idea</span>
-              <span className="mx-2 md:mx-4 opacity-40">+</span>
-              <span className="opacity-100">Estructura</span>
-              <span className="mx-2 md:mx-4 opacity-40">=</span>
-              <span className="border-b border-black/30 pb-1">Crecimiento</span>
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: isInitialLoad ? 7.5 : 0, duration: 0.5 }}
+                className="inline-block opacity-60"
+              >
+                Idea
+              </motion.span>
+
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: isInitialLoad ? 8.0 : 0, duration: 0.5 }}
+                className="mx-2 md:mx-4 opacity-40 inline-block"
+              >
+                +
+              </motion.span>
+
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: isInitialLoad ? 8.5 : 0, duration: 0.5 }}
+                className="inline-block opacity-100"
+              >
+                Estructura
+              </motion.span>
+
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: isInitialLoad ? 9.0 : 0, duration: 0.5 }}
+                className="mx-2 md:mx-4 opacity-40 inline-block"
+              >
+                =
+              </motion.span>
+
+              {/* Crecimiento with Upward Arrow Animation */}
+              <span className="inline-flex items-center gap-1 relative">
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  transition={{ delay: isInitialLoad ? 9.5 : 0, duration: 0.8, type: "spring", stiffness: 100 }}
+                  className="inline-block border-b border-black/30 pb-1 font-medium text-black"
+                >
+                  Crecimiento
+                </motion.span>
+
+                {/* Disappearing Arrow Effect */}
+                <motion.span
+                  initial={{ opacity: 0, y: 5, x: 0 }}
+                  animate={{ opacity: [0, 1, 0], y: -25 }} // Straight up and vanishes
+                  transition={{
+                    delay: isInitialLoad ? 9.8 : 0, // Starts slightly after word appears
+                    duration: 1.5,
+                    ease: "easeOut",
+                    times: [0, 0.2, 1]
+                  }}
+                  className="absolute -right-6 top-1"
+                >
+                  <ArrowUp className="w-5 h-5 text-black/60" />
+                </motion.span>
+              </span>
             </h2>
           </div>
 
           {/* Desktop: Strategy/Tech Text - Visible below formula */}
-          <div className="py-2 hidden 2xl:inline-block">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: isInitialLoad ? 14.5 : 0, duration: 1.0 }}
+            className="py-2 hidden 2xl:inline-block"
+          >
             <p className={cn(
               "text-xs md:text-sm font-bold tracking-[0.15em] uppercase text-black/60",
               spaceMono.className
             )}>
               Estrategia Técnica &nbsp;·&nbsp; Arquitectura Escalable &nbsp;·&nbsp; Desarrollo de Producto
             </p>
-          </div>
+          </motion.div>
 
-        </motion.div>
+        </div>
       </div>
 
       {/* Phase 7: Welcome Message (Bottom Center) */}
@@ -212,7 +270,7 @@ export function Home({ onOpenMenu, onNavigate, isInitialLoad = false }: HomeProp
             exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
             className={cn(
-              "absolute bottom-12 md:bottom-16 left-1/2 -translate-x-1/2 text-black/40 italic text-xl md:text-2xl tracking-widest pointer-events-none whitespace-nowrap",
+              "absolute bottom-48 md:bottom-16 left-0 w-full text-center text-black/40 italic text-xl md:text-2xl tracking-widest pointer-events-none whitespace-nowrap z-30",
               playfair.className
             )}
           >
@@ -224,8 +282,9 @@ export function Home({ onOpenMenu, onNavigate, isInitialLoad = false }: HomeProp
       {/* Bottom: Menu Trigger (Mobile Only -> Now < 2xl) */}
       <motion.div
         className="w-full flex flex-col items-center justify-end z-20 pb-12 gap-6 2xl:hidden"
-        initial={{ opacity: 1 }}
+        initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
+        transition={{ delay: isInitialLoad ? 11.0 : 0, duration: 2.5, ease: "easeInOut" }}
       >
         {/* Subtle Menu Trigger - Mobile Only (CSS controlled) */}
         <button

@@ -21,7 +21,9 @@ interface TypographicNavigationProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   isInitialLoad?: boolean;
-  isTransitioning?: boolean; // Restored prop
+  isTransitioning?: boolean;
+  menuSource?: 'header' | 'hero_cta';
+  onHeaderOpen?: () => void;
 }
 
 export function TypographicNavigation({
@@ -31,21 +33,28 @@ export function TypographicNavigation({
   setIsOpen,
   isInitialLoad = false,
   isTransitioning = false,
+  menuSource = 'header',
+  onHeaderOpen,
 }: TypographicNavigationProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [revealedCount, setRevealedCount] = useState(0);
 
+  const handleOpen = () => {
+    if (onHeaderOpen) onHeaderOpen();
+    setIsOpen(true);
+  };
+
   useEffect(() => {
-    // If initial load, wait for full choreography (approx 7.5s)
+    // If initial load, wait for full choreography (approx 9.5s - sync with menu trigger)
     // If returning, quick fade in (0.5s)
-    const delayTime = isInitialLoad ? 7500 : 500;
+    const delayTime = isInitialLoad ? 9500 : 500;
 
     const timer = setTimeout(() => {
-      // Staggered reveal
+      // Staggered reveal (Slower - 600ms per item)
       setRevealedCount(1);
-      setTimeout(() => setRevealedCount(2), 400);
-      setTimeout(() => setRevealedCount(3), 800);
-      setTimeout(() => setRevealedCount(4), 1200);
+      setTimeout(() => setRevealedCount(2), 600);
+      setTimeout(() => setRevealedCount(3), 1200);
+      setTimeout(() => setRevealedCount(4), 1800);
     }, delayTime);
 
     return () => clearTimeout(timer);
@@ -126,11 +135,14 @@ export function TypographicNavigation({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed top-8 right-8 z-[60] p-2 hover:bg-black/5 rounded-full transition-colors 2xl:hidden pointer-events-auto"
-            onClick={() => setIsOpen(true)}
+            className={cn(
+              "fixed top-8 right-8 z-[60] px-4 py-2 hover:bg-black/5 rounded-full transition-colors 2xl:hidden pointer-events-auto",
+              spaceMono.className
+            )}
+            onClick={handleOpen}
             aria-label="Menu"
           >
-            <Menu className="w-6 h-6" />
+            <span className="text-xs font-bold tracking-widest uppercase text-black">MENU</span>
           </motion.button>
         )}
       </AnimatePresence>
@@ -145,11 +157,40 @@ export function TypographicNavigation({
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="fixed inset-0 bg-white/95 backdrop-blur-sm z-[55] flex flex-col items-center justify-center pointer-events-auto 2xl:hidden"
           >
+            {/* Top Right Close Button */}
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-8 right-8 p-2 hover:bg-black/5 rounded-full transition-colors"
+              className={cn(
+                "absolute top-8 right-8 z-[70] transition-colors p-2 rounded-full",
+                menuSource === 'header'
+                  ? "hover:bg-black/5 opacity-100"
+                  : "opacity-30 hover:opacity-100"
+              )}
+              aria-label="Close menu"
             >
-              <X className="w-8 h-8" />
+              {menuSource === 'header' ? (
+                <X className="w-8 h-8" />
+              ) : (
+                <span className={cn("text-xs font-bold tracking-widest uppercase", spaceMono.className)}>CERRAR</span>
+              )}
+            </button>
+
+            {/* Bottom Center Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                "absolute bottom-20 left-1/2 -translate-x-1/2 z-[70] transition-colors p-2 rounded-full",
+                menuSource === 'hero_cta'
+                  ? "hover:bg-black/5 opacity-100"
+                  : "opacity-30 hover:opacity-100"
+              )}
+              aria-label="Close menu"
+            >
+              {menuSource === 'hero_cta' ? (
+                <X className="w-8 h-8" />
+              ) : (
+                <span className={cn("text-xs font-bold tracking-widest uppercase", spaceMono.className)}>CERRAR</span>
+              )}
             </button>
 
             <motion.div
@@ -212,8 +253,8 @@ export function TypographicNavigation({
                   playfair.className,
 
                   // Dynamic Duration: Fast on reveal/interact, slow only for subtle effects later if needed
-                  // Increased to 1500ms for subtle blending
-                  (isHovered || isActive) ? "duration-500" : "duration-[1500ms]",
+                  // Increased to 2500ms for ghostly/gradual paint (was 1500)
+                  (isHovered || isActive) ? "duration-500" : "duration-[2500ms]",
 
                   // 1. Active State
                   isActive

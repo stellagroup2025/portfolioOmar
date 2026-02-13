@@ -48,8 +48,8 @@ export function About() {
       <StructureBackground />
 
       <div className="w-full max-w-5xl z-10">
-        {/* CONTENT AREA - FIXED HEIGHT */}
-        <div className="h-[55vh] md:h-[60vh] flex items-center justify-center mb-8">
+        {/* CONTENT AREA - FLEXIBLE HEIGHT ON MOBILE */}
+        <div className="min-h-[50vh] md:h-[60vh] h-auto flex flex-col md:flex-row items-center md:items-center justify-center mb-8 md:mb-0">
           <AnimatePresence mode="wait">
 
             {/* TAB 1: PERFIL */}

@@ -40,7 +40,7 @@ export function Contact() {
 
         {/* HEADLINE */}
         <h2 className={cn("text-3xl md:text-5xl lg:text-7xl text-black font-normal leading-tight", playfair.className)}>
-          Hay ideas que no necesitan un proceso.<br />
+          Hay ideas que no necesitan un gran proceso.<br />
           <span className="text-black/40 italic">Solo el momento adecuado.</span>
         </h2>
 

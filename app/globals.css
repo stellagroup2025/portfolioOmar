@@ -49,6 +49,23 @@
   }
 }
 
+/* Hide default cursor on desktop */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+
+  a,
+  button,
+  [role="button"],
+  input,
+  textarea,
+  select {
+    cursor: none;
+    /* Ensure interactive elements don't show default pointer */
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
