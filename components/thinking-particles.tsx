@@ -18,9 +18,11 @@ export function ThinkingParticles() {
         let particles: Particle[] = [];
 
         // Configuration
-        const particleCount = width < 768 ? 40 : 80;
-        const connectionDistance = 150;
+        const isMobile = width < 768; // Mobile check
+        const particleCount = isMobile ? 25 : 80; // Reduced from 40 to 25 on mobile
+        const connectionDistance = isMobile ? 120 : 150; // Slightly shorter connections on mobile
         const mouseDistance = 200;
+        const driftSpeed = isMobile ? 0.2 : 0.3; // Slower drift on mobile
 
         // Resize handler
         const handleResize = () => {
@@ -28,6 +30,9 @@ export function ThinkingParticles() {
             height = window.innerHeight;
             canvas.width = width;
             canvas.height = height;
+            // Re-init on resize to adjust count if crossing breakpoint
+            // But usually resize on mobile is just address bar, so maybe keep it simple
+            // For now, re-init is fine
             initParticles();
         };
 
@@ -52,9 +57,10 @@ export function ThinkingParticles() {
             constructor() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.3; // Very slow natural drift
-                this.vy = (Math.random() - 0.5) * 0.3;
-                this.size = Math.random() * 2 + 1;
+                this.vx = (Math.random() - 0.5) * driftSpeed; // Adjusted drift
+                this.vy = (Math.random() - 0.5) * driftSpeed;
+                // Smaller particles on mobile: 0.5-2px vs 1-3px
+                this.size = isMobile ? Math.random() * 1.5 + 0.5 : Math.random() * 2 + 1;
             }
 
             update() {
@@ -94,13 +100,22 @@ export function ThinkingParticles() {
                 if (!ctx) return;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = "rgba(0,0,0,0.1)"; // Very subtle dots
+                // Subtler dots on mobile
+                ctx.fillStyle = isMobile ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.1)";
                 ctx.fill();
             }
         }
 
         function initParticles() {
             particles = [];
+            // Re-calculate isMobile and params in case of resize crossing breakpoint?
+            // Since this runs inside an effect that depends on nothing (empty deps), variables are closed over initial load.
+            // For proper resize handling, we'd need to update these vars.
+            // But we're inside the closure. 
+            // Better to re-calc count inside the loop if we want full responsiveness, 
+            // but for now, initial load config is usually sufficient for mobile.
+            // Let's stick to the initial closure logic for simplicity unless rotation happens.
+
             for (let i = 0; i < particleCount; i++) {
                 particles.push(new Particle());
             }
@@ -122,7 +137,11 @@ export function ThinkingParticles() {
 
                     if (distance < connectionDistance) {
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(0,0,0,${0.1 - distance / connectionDistance * 0.1})`; // Fade out with distance
+                        // Subtler lines on mobile (max 0.05 opacity vs 0.1)
+                        const maxOpacity = isMobile ? 0.05 : 0.1;
+                        const opacity = maxOpacity - (distance / connectionDistance) * maxOpacity;
+
+                        ctx.strokeStyle = `rgba(0,0,0,${opacity})`; // Fade out with distance
                         ctx.lineWidth = 1;
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);

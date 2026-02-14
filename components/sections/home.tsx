@@ -153,7 +153,8 @@ export function Home({ onOpenMenu, onNavigate, isInitialLoad = false }: HomeProp
             {/* Mobile Delays calculated for 0.07s/char */}
             <TypewriterLine text="Cuando las ideas" delay={2.4} className="block" isInitialLoad={isInitialLoad} />
             <TypewriterLine text="encuentran forma," delay={3.6} className="block" isInitialLoad={isInitialLoad} />
-            <TypewriterLine text="el crecimiento es natural." delay={4.9} className="opacity-90 block" isInitialLoad={isInitialLoad} />
+            <TypewriterLine text="el crecimiento es" delay={4.9} className="opacity-90 block" isInitialLoad={isInitialLoad} />
+            <TypewriterLine text="natural." delay={5.5} className="opacity-90 block" isInitialLoad={isInitialLoad} />
           </div>
 
           {/* Desktop Layout */}

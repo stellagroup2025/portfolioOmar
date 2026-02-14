@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { Playfair_Display, Space_Mono } from "next/font/google";
+import { Playfair_Display, Space_Mono, Inter } from "next/font/google";
 import Image from "next/image";
 import { StructureBackground } from "@/components/structure-background";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -18,197 +18,189 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
 });
 
-type Tab = 'perfil' | 'filosofia' | 'vision';
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+});
+
+type Tab = 'perfil' | 'enfoque' | 'aporte';
 
 export function About() {
-  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<Tab>('perfil');
+  const isMobile = useIsMobile();
 
-  // ANIMATION VARIANTS (Same as Approach)
-  const fade = {
-    hidden: { opacity: 0, y: 20, filter: "blur(10px)" },
-    show: {
+  const contentVariants = {
+    hidden: { opacity: 0, y: 10, filter: "blur(4px)" },
+    visible: {
       opacity: 1,
       y: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.6, ease: "easeOut" }
+      transition: { duration: 0.5, ease: [0.32, 0.72, 0, 1] }
     },
     exit: {
       opacity: 0,
-      y: -20,
-      filter: "blur(10px)",
-      transition: { duration: 0.4, ease: "easeIn" }
+      y: -10,
+      filter: "blur(4px)",
+      transition: { duration: 0.3, ease: "easeIn" }
     }
   };
 
   return (
-    <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden px-6 pb-6 pt-32 md:px-12 md:pb-12 md:pt-40">
+    <div className="w-full min-h-dvh bg-[#faf9f6] flex flex-col justify-center relative overflow-hidden px-6 py-24 md:px-12 lg:px-24">
 
       {/* BACKGROUND */}
       <StructureBackground />
 
-      <div className="w-full max-w-5xl z-10">
-        {/* CONTENT AREA - FLEXIBLE HEIGHT ON MOBILE */}
-        <div className="min-h-[50vh] md:h-[60vh] h-auto flex flex-col md:flex-row items-center md:items-center justify-center mb-8 md:mb-0">
-          <AnimatePresence mode="wait">
+      {/* MAIN LAYOUT GRID (Desktop: 2 Cols, Mobile: Stack) */}
+      <div className="w-full max-w-7xl mx-auto z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
 
-            {/* TAB 1: PERFIL */}
-            {activeTab === 'perfil' && (
-              <motion.div
-                key="perfil"
-                variants={fade}
-                initial="hidden"
-                animate="show"
-                exit="exit"
-                className="w-full max-w-5xl flex flex-col md:flex-row items-start gap-8 md:gap-12"
-              >
-                <div className="flex-1 space-y-6 md:space-y-8 pt-2">
-                  <span className={cn("text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
-                    01 Quién soy
-                  </span>
-                  <h2 className={cn("text-3xl md:text-5xl lg:text-6xl text-black font-normal leading-tight", playfair.className)}>
-                    Omar Somoza.<br />
-                    <span className="text-black/40 italic">Constructor.</span>
-                  </h2>
-                  <p className="text-lg md:text-xl text-black/60 font-light leading-relaxed">
-                    Transformo complejidad técnica en sistemas funcionales. Mi trabajo es diseñar soluciones que operan, escalan y generan valor real desde el primer día.
-                  </p>
-                  <button
-                    onClick={() => setActiveTab('filosofia')}
-                    className={cn(
-                      "text-lg md:text-xl text-black italic text-left hover:underline decoration-1 underline-offset-4 transition-all w-fit mt-4",
-                      playfair.className
-                    )}
-                  >
-                    Cómo trabajo &rarr;
-                  </button>
-                </div>
+        {/* --- LEFT COLUMN (Text Content) --- */}
+        <div className="flex flex-col gap-12 lg:gap-16 order-1">
 
-                {/* Image Profile - Aligned top with name (skipping label via margin-top) */}
-                <div className="relative w-56 h-72 md:w-80 md:h-96 grayscale opacity-90 hover:opacity-100 transition-opacity duration-700 mix-blend-multiply flex-shrink-0 md:mt-14 rounded-lg overflow-hidden">
-                  <Image
-                    src="/omardubai.png"
-                    alt="Omar Somoza"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              </motion.div>
-            )}
+          {/* 1. STATEMENT BLOCK */}
+          <div className="flex flex-col gap-6 items-start text-left">
+            <h1 className={cn("text-4xl md:text-5xl lg:text-6xl text-black leading-tight tracking-tight", playfair.className)}>
+              Omar Somoza.
+            </h1>
 
-            {/* TAB 2: FILOSOFÍA -> ENFOQUE */}
-            {activeTab === 'filosofia' && (
-              <motion.div
-                key="filosofia"
-                variants={fade}
-                initial="hidden"
-                animate="show"
-                exit="exit"
-                className="w-full max-w-3xl"
-              >
-                <span className={cn("block mb-8 md:mb-12 text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
-                  02 Enfoque
-                </span>
+            <div className={cn("flex flex-col gap-2 opacity-80", playfair.className)}>
+              <p className="text-xl md:text-2xl lg:text-3xl text-black/80 font-normal">
+                Sistemas que alinean personas.
+              </p>
+              <p className="text-xl md:text-2xl lg:text-3xl text-black/60 font-normal">
+                Arquitectura para ordenar la complejidad.
+              </p>
+              <p className="text-xl md:text-2xl lg:text-3xl text-black/60 font-normal">
+                Responsabilidad para sostener la escala.
+              </p>
+              <p className="text-xl md:text-2xl lg:text-3xl text-black/40 font-normal italic">
+                Sinergia como sistema.
+              </p>
+            </div>
+          </div>
 
-                <div className="space-y-8 md:space-y-12">
-                  <p className={cn(
-                    "text-2xl md:text-4xl text-black/80 font-normal leading-snug",
-                    playfair.className
-                  )}>
-                    "Construir no es ejecutar rápido. <br />
-                    <span className="opacity-50 italic">Es elegir bien el camino."</span>
-                  </p>
+          {/* MOBILE IMAGE PLACEMENT (If Mobile, show image here between Concept and Text) */}
+          {/* Using 'hidden lg:hidden' to only show on mobile/tablet intermediate if strictly needed by user order. 
+              User requested: Name -> Concept -> Image -> Text.
+              So I will insert the image block HERE for mobile (lg:hidden) and in the Right Column for Desktop (hidden lg:block).
+          */}
+          <div className="lg:hidden w-full relative aspect-[4/5] max-h-[60vh] grayscale mix-blend-multiply opacity-90 my-4">
+            <Image
+              src="/omardubai.png"
+              alt="Omar Somoza Skyline"
+              fill
+              className="object-cover object-top"
+              priority
+            />
+          </div>
 
-                  <div className="space-y-6">
-                    <p className="text-base md:text-lg text-black/60 font-light leading-relaxed">
-                      El software es un medio, no el fin. La calidad técnica solo importa si sostiene la operación del negocio de forma fiable.
-                    </p>
-                    <p className="text-base md:text-lg text-black/60 font-light leading-relaxed">
-                      Mi metodología prioriza la claridad. Estructura frente al caos. Resultados sostenibles frente a parches temporales.
-                    </p>
-                  </div>
+          {/* VISUAL SEPARATION (Desktop only, or small on mobile) */}
+          <div className="w-full h-px bg-gradient-to-r from-black/20 to-transparent" />
 
-                  <button
-                    onClick={() => setActiveTab('vision')}
-                    className={cn(
-                      "text-lg md:text-xl text-black italic text-left hover:underline decoration-1 underline-offset-4 transition-all w-fit",
-                      playfair.className
-                    )}
-                  >
-                    Lo que aporto &rarr;
-                  </button>
-                </div>
-              </motion.div>
-            )}
+          {/* 3. TABS SECTION */}
+          <div className="flex flex-col gap-8 w-full">
 
-            {/* TAB 3: VISIÓN -> APORTE */}
-            {activeTab === 'vision' && (
-              <motion.div
-                key="vision"
-                variants={fade}
-                initial="hidden"
-                animate="show"
-                exit="exit"
-                className="w-full max-w-3xl flex flex-col items-center text-center gap-8 md:gap-12"
-              >
-                <span className={cn("text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
-                  03 Aporte
-                </span>
-
-                <p className={cn(
-                  "text-3xl md:text-5xl text-black/80 font-normal italic leading-relaxed",
-                  playfair.className
-                )}>
-                  "Entregables claros. <br />
-                  Sistemas robustos."
-                </p>
-
-                <p className="text-lg md:text-xl text-black/50 font-light leading-relaxed max-w-xl">
-                  Aporto experiencia técnica para desbloquear problemas y visión de arquitectura para que el producto crezca sin romperse.
-                </p>
-
+            {/* TABS NAVIGATION */}
+            <div className="flex items-center gap-8 border-b border-black/5 pb-4 w-fit overflow-x-auto no-scrollbar">
+              {[
+                { id: 'perfil', label: 'PERFIL' },
+                { id: 'enfoque', label: 'ENFOQUE' },
+                { id: 'aporte', label: 'APORTE' }
+              ].map((tab) => (
                 <button
-                  onClick={() => setActiveTab('perfil')}
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as Tab)}
                   className={cn(
-                    "text-sm md:text-base text-black/40 italic text-left hover:text-black transition-all w-fit mt-8",
-                    playfair.className
+                    "text-xs md:text-sm tracking-[0.2em] uppercase transition-all duration-300 relative py-2 whitespace-nowrap",
+                    spaceMono.className,
+                    activeTab === tab.id ? "text-black font-bold" : "text-black/40 hover:text-black/70"
                   )}
                 >
-                  Volver al perfil ↺
+                  {tab.label}
+                  {activeTab === tab.id && (
+                    <motion.div
+                      layoutId="activeAboutTabLine"
+                      className="absolute bottom-0 left-0 w-full h-[1px] bg-black"
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
                 </button>
-              </motion.div>
-            )}
+              ))}
+            </div>
 
-          </AnimatePresence>
+            {/* TAB CONTENT */}
+            <div className="min-h-[150px]">
+              <AnimatePresence mode="wait">
+                {activeTab === 'perfil' && (
+                  <motion.div
+                    key="perfil"
+                    variants={contentVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="space-y-6"
+                  >
+                    <p className={cn("text-lg md:text-xl text-black/70 font-light leading-relaxed", inter.className)}>
+                      Trayectoria definida por la construcción de productos digitales escalables. Experiencia acumulada en entornos de alta incertidumbre y exigencia técnica.
+                    </p>
+                    <p className={cn("text-lg md:text-xl text-black/70 font-light leading-relaxed", inter.className)}>
+                      Enfoque en la intersección entre ingeniería de software y estrategia de producto. La capacidad técnica se utiliza para resolver problemas de negocio, no para acumular deuda tecnológica.
+                    </p>
+                  </motion.div>
+                )}
+
+                {activeTab === 'enfoque' && (
+                  <motion.div
+                    key="enfoque"
+                    variants={contentVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="space-y-6"
+                  >
+                    <p className={cn("text-lg md:text-xl text-black/70 font-light leading-relaxed", inter.className)}>
+                      Estructura sobre caos. La arquitectura de software no es un fin, sino el medio para garantizar operatividad continua.
+                    </p>
+                    <p className={cn("text-lg md:text-xl text-black/70 font-light leading-relaxed", inter.className)}>
+                      Se prioriza la legibilidad, la mantenibilidad y la resistencia del sistema. Las decisiones se toman basándose en compensaciones (trade-offs) claras, no en tendencias.
+                    </p>
+                  </motion.div>
+                )}
+
+                {activeTab === 'aporte' && (
+                  <motion.div
+                    key="aporte"
+                    variants={contentVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="space-y-6"
+                  >
+                    <p className={cn("text-lg md:text-xl text-black/70 font-light leading-relaxed", inter.className)}>
+                      Visión de largo plazo aplicada a la ejecución diaria. Identificación temprana de riesgos estructurales y operativos.
+                    </p>
+                    <p className={cn("text-lg md:text-xl text-black/70 font-light leading-relaxed", inter.className)}>
+                      Diseño de sistemas que permiten a los equipos escalar sin fricción. Entrega de activos digitales robustos, documentados y listos para absorber capital.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+          </div>
         </div>
 
-        {/* NAVIGATION */}
-        <div className="w-full flex justify-start border-t border-black/5 pt-4">
-          <div className="flex items-center gap-8 md:gap-16">
-            {[
-              { id: 'perfil', label: 'Perfil' },
-              { id: 'filosofia', label: 'Enfoque' },
-              { id: 'vision', label: 'Aporte' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as Tab)}
-                className={cn(
-                  "text-sm md:text-base tracking-widest uppercase transition-all duration-300 relative py-3 px-2",
-                  spaceMono.className,
-                  activeTab === tab.id ? "text-black font-bold" : "text-black/40 hover:text-black/70"
-                )}
-              >
-                {tab.label}
-                {activeTab === tab.id && (
-                  <motion.div
-                    layoutId="activeAboutTab"
-                    className="absolute bottom-0 left-0 w-full h-[3px] bg-black"
-                  />
-                )}
-              </button>
-            ))}
+        {/* --- RIGHT COLUMN (Image - Desktop Only) --- */}
+        <div className="hidden lg:block relative h-full min-h-[600px] w-full order-2">
+          <div className="relative w-full h-full grayscale mix-blend-multiply opacity-90 p-8">
+            {/* Padding lightly to not touch edges as requested */}
+            <Image
+              src="/omardubai.png"
+              alt="Omar Somoza Skyline"
+              fill
+              className="object-cover object-center"
+              priority
+            />
           </div>
         </div>
 

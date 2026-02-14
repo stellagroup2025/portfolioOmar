@@ -94,8 +94,8 @@ export default function Portfolio() {
       : () => handleSectionChange("home"); // En cualquier otro caso, volver a home
 
   return (
-    <div className="min-h-screen overflow-hidden text-black  aaaa">
-      <header className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-6">
+    <div className="min-h-screen overflow-hidden text-black pointer-events-none">
+      <header className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 pt-8 pb-6 md:py-6 pointer-events-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4 md:gap-6">
             <motion.div
@@ -140,7 +140,7 @@ export default function Portfolio() {
                 }
                 onClick={() => setIsMenuOpen(true)}
                 className={cn(
-                  "text-sm md:text-xl font-bold tracking-widest text-black/40 hover:text-black uppercase block cursor-pointer transition-colors", // Mobile: text-sm, Desktop: text-xl, added hover
+                  "text-sm md:text-xl font-bold tracking-widest text-black/40 hover:text-black uppercase block cursor-pointer transition-colors relative z-50 pointer-events-auto", // Added z-50 pointer-events-auto
                   spaceMono.className
                 )}
               >
@@ -160,7 +160,7 @@ export default function Portfolio() {
       <div className="relative h-screen">
         <AnimatePresence mode="wait">
           <PageTransition key={activeSection}>
-            <div className="w-full h-full">
+            <div className="w-full h-full pointer-events-auto">
               {sections[activeSection as keyof typeof sections]}
             </div>
           </PageTransition>

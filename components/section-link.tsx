@@ -15,7 +15,7 @@ export function SectionLink({ onClick, isTransitioning, section }: SectionLinkPr
   return (
     <motion.button
       onClick={() => !isTransitioning && onClick()}
-      className="fixed top-1/2 left-2 md:left-6 -translate-y-1/2 text-black/40 hover:text-black transition-colors duration-300 pointer-events-auto z-[60] flex flex-col items-center mix-blend-multiply"
+      className="hidden md:flex fixed top-1/2 left-6 -translate-y-1/2 text-black/40 hover:text-black transition-colors duration-300 pointer-events-auto z-[60] flex-col items-center mix-blend-multiply"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.5, duration: 0.3 }}

@@ -2,11 +2,11 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import React from 'react';
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Playfair_Display, Space_Mono } from "next/font/google";
+import { Playfair_Display, Space_Mono, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Mail, Linkedin } from "lucide-react";
-import { SparkBackground } from "@/components/spark-background";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -18,82 +18,126 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
 });
 
-type Tab = 'hablemos' | 'conectar';
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+});
 
 export function Contact() {
   const isMobile = useIsMobile();
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
+  const handleCopy = (e: React.SyntheticEvent) => {
+    e.preventDefault();
     navigator.clipboard.writeText("contacto@omarsomoza.es");
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1200);
   };
 
   return (
-    <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden px-6 pb-6 pt-32 md:px-12 md:pb-12 md:pt-40">
+    <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-center relative overflow-hidden px-6 md:px-12">
 
-      {/* BACKGROUND */}
-      <SparkBackground />
+      <div className="w-full max-w-5xl z-20 flex flex-col items-center text-center">
 
-      <div className="w-full max-w-4xl z-10 flex flex-col items-center text-center gap-10 md:gap-14">
-
-        {/* HEADLINE */}
-        <h2 className={cn("text-3xl md:text-5xl lg:text-7xl text-black font-normal leading-tight", playfair.className)}>
-          Hay ideas que no necesitan un gran proceso.<br />
-          <span className="text-black/40 italic">Solo el momento adecuado.</span>
-        </h2>
-
-        {/* SUBHEADLINE */}
-        <p className="text-lg md:text-2xl text-black/60 font-light leading-relaxed max-w-2xl">
-          A veces, una conversación es suficiente.
-        </p>
-
-        {/* MAIN CTA - LINKEDIN */}
-        <a
-          href="https://www.linkedin.com/in/omar-somoza-230b71228/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cn(
-            "text-2xl md:text-3xl text-black border-b border-black/20 hover:border-black transition-all duration-300 pb-1 italic font-medium no-underline hover:pr-4",
+        {/* HEADLINE BLOCK */}
+        <div className="flex flex-col items-center mb-16 md:mb-24">
+          <h2 className={cn(
+            "text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] text-black font-normal leading-[1.1] md:leading-tight mb-6 md:mb-8 max-w-4xl",
             playfair.className
-          )}
-        >
-          Nos vemos en LinkedIn &rarr;
-        </a>
+          )}>
+            Los caminos se reconocen<br className="hidden md:block" /> cuando llega el momento.
+          </h2>
 
-        {/* SECONDARY - EMAIL WITH COPY FUNCTION */}
-        <div className="flex flex-col md:flex-row items-center gap-2 text-base md:text-lg text-black/40 font-light mt-4 mb-8">
-          <span>o escríbeme en</span>
+          <p className={cn(
+            "text-base md:text-lg text-black/50 font-normal tracking-wide",
+            spaceMono.className
+          )}>
+            Nada es casual.
+          </p>
+        </div>
 
-          <button
-            onClick={handleCopy}
-            className="relative group inline-flex flex-col items-center justify-center align-baseline"
+        {/* CONTACT ACTIONS BLOCK */}
+        <div className="flex flex-col items-center gap-12 md:gap-16">
+
+          {/* EMAIL - PRIMARY */}
+          <div className="relative group flex flex-col items-center">
+            <a
+              href={isMobile ? undefined : "mailto:contacto@omarsomoza.es"}
+              onClick={(e) => {
+                if (isMobile) {
+                  e.preventDefault();
+                  handleCopy(e);
+                }
+              }}
+              onContextMenu={handleCopy}
+              className="relative cursor-pointer"
+            >
+              <span className={cn(
+                "text-2xl md:text-3xl text-black font-normal tracking-tight pb-0.5 border-b-[1px] border-transparent transition-all duration-300 group-hover:border-black",
+                inter.className
+              )}>
+                contacto@omarsomoza.es
+              </span>
+            </a>
+
+            {/* HOVER / FEEDBACK SUBTEXT */}
+            <div className="h-6 mt-2 flex items-center justify-center overflow-hidden">
+              <AnimatePresence mode="wait">
+                {copied ? (
+                  <motion.span
+                    key="copied"
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{ duration: 0.3 }}
+                    className={cn("text-xs md:text-sm text-green-600 font-medium tracking-wide", spaceMono.className)}
+                  >
+                    COPIADO
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="actions"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0 }} // Hidden by default
+                    whileInView={{ opacity: 1 }} // Show logic handled mostly by CSS group-hover on parent usually, but here we want it on email hover. 
+                    // Actually, simpler to use standard CSS opacity for hover state if not copied.
+                    className={cn(
+                      "text-[10px] md:text-xs text-black/30 tracking-widest uppercase opacity-0 transition-opacity duration-300 group-hover:opacity-100", // This group-hover needs to be on a parent of both
+                      spaceMono.className
+                    )}
+                  >
+                    {/* Controlled by parent hover */}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+
+              {/* Static "Escribir · Copiar" that fades out when copied */}
+              {!copied && (
+                <span className={cn(
+                  "absolute text-[10px] md:text-xs text-black/30 tracking-widest uppercase opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-0",
+                  "group-hover:opacity-100", // We need a parent group wrapper
+                  spaceMono.className
+                )}>
+                  Copiar (Clic dcho.)
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* LINKEDIN - SECONDARY */}
+          <a
+            href="https://www.linkedin.com/in/omar-somoza-230b71228/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              "text-base md:text-lg text-black/60 hover:text-black transition-colors duration-300 flex items-center gap-2",
+              inter.className
+            )}
           >
-            <span className={cn(
-              "text-black/60 hover:text-black transition-colors border-b border-transparent hover:border-black/20 pb-0.5",
-              copied && "text-black border-black"
-            )}>
-              contacto@omarsomoza.es
-            </span>
+            Nos vemos en LinkedIn
+            <span className="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </a>
 
-            {/* FEEDBACK - Adjusted for Mobile to avoid overlap */}
-            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 h-4 flex items-center justify-center whitespace-nowrap pointer-events-none w-full">
-              <span className={cn(
-                "absolute font-sans text-[10px] tracking-[0.2em] uppercase transition-all duration-300 ease-out text-black/40",
-                !copied ? "opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0" : "opacity-0"
-              )}>
-                Copiar
-              </span>
-
-              <span className={cn(
-                "absolute font-sans text-[10px] tracking-[0.2em] uppercase transition-all duration-300 ease-out text-green-600 font-bold",
-                copied ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
-              )}>
-                ¡Copiado!
-              </span>
-            </span>
-          </button>
         </div>
 
       </div>

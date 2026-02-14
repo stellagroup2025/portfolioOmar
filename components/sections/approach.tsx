@@ -1,217 +1,173 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // Added AnimatePresence
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Playfair_Display, Space_Mono } from "next/font/google"; // Removed unnecessary imports
+import { motion, AnimatePresence } from "framer-motion";
+import { Playfair_Display, Space_Mono, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { ThinkingParticles } from "@/components/thinking-particles"; // Import new background
+import { ThinkingParticles } from "@/components/thinking-particles";
 
 const playfair = Playfair_Display({
     subsets: ["latin"],
     weight: ["400", "500", "600"],
+    variable: "--font-playfair",
 });
 
 const spaceMono = Space_Mono({
     subsets: ["latin"],
     weight: ["400", "700"],
+    variable: "--font-space-mono",
 });
 
-// TYPES & DATA
-type Tab = 'manifesto' | 'systems' | 'principles';
+const inter = Inter({
+    subsets: ["latin"],
+    weight: ["300", "400", "500", "600"],
+    variable: "--font-inter",
+});
 
-const systemTypes = [
+// CHAPTERS DATA - "Structural Framework"
+const chapters = [
     {
-        title: "Plataformas de negocio",
-        description: "Operaciones, datos y decisiones."
+        id: "systems",
+        label: "SISTEMAS",
+        title: "Arquitectura es negocio.",
+        body: "La escalabilidad es una decisión arquitectónica, no un parche. Diseño sistemas donde la complejidad está encapsulada, no expuesta. La estabilidad es la base del crecimiento."
     },
     {
-        title: "Productos SaaS B2B",
-        description: "Escalabilidad y control."
+        id: "decision",
+        label: "DECISIÓN",
+        title: "Deuda técnica como instrumento financiero.",
+        body: "El código es un pasivo, no un activo. Cada línea que escribimos tiene un coste de mantenimiento. Priorizo la claridad y la capacidad de eliminación sobre la astucia. Pagamos intereses por la complejidad."
     },
     {
-        title: "Automatización e IA",
-        description: "Eficiencia sin fricción."
+        id: "ux",
+        label: "UX",
+        title: "Claridad estructural.",
+        body: "La fricción es un fallo de empatía. La interfaz no son solo píxeles; es la lógica del negocio hecha visible. La claridad es la única métrica que importa."
     },
     {
-        title: "Arquitectura",
-        description: "Bases para crecer."
+        id: "ia",
+        label: "IA",
+        title: "Inteligencia como utilidad.",
+        body: "No es magia, es apalancamiento. Integro IA donde reduce la carga cognitiva o acelera flujos de trabajo verificados. Implementación práctica sobre el hype."
+    },
+    {
+        id: "teams",
+        label: "EQUIPOS",
+        title: "Cultura es el sistema operativo.",
+        body: "La autonomía requiere límites claros. Construyo entornos donde la documentación es un reflejo y la toma de decisiones está distribuida, no embotellada."
+    },
+    {
+        id: "capital",
+        label: "CAPITAL",
+        title: "Eficiencia de recursos.",
+        body: "Estamos construyendo activos. Cada ciclo de desarrollo debe incrementar incrementalmente la valoración del producto, no solo su conteo de funcionalidades."
     }
 ];
 
-const principles = [
-    "Arquitectura es negocio.",
-    "IA con criterio, no por moda.",
-    "Reducir fricción, no crearla."
-];
-
 export function Approach() {
-    const isMobile = useIsMobile();
-    const [activeTab, setActiveTab] = useState<Tab>('manifesto');
+    const [activeChapterId, setActiveChapterId] = useState("systems");
 
-    // ANIMATION VARIANTS
-    const fade = {
-        hidden: { opacity: 0, y: 20, filter: "blur(10px)" }, // blur effect
-        show: {
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-            transition: { duration: 0.6, ease: "easeOut" }
-        },
-        exit: {
-            opacity: 0,
-            y: -20,
-            filter: "blur(10px)",
-            transition: { duration: 0.4, ease: "easeIn" }
-        }
+    // Find active chapter data & index
+    const activeChapterIndex = chapters.findIndex(c => c.id === activeChapterId);
+    const activeChapter = chapters[activeChapterIndex] || chapters[0];
+
+    // Handle Next Button
+    const handleNext = () => {
+        const nextIndex = (activeChapterIndex + 1) % chapters.length;
+        setActiveChapterId(chapters[nextIndex].id);
     };
 
     return (
-        <div className="w-full h-dvh bg-[#faf9f6] flex flex-col items-center justify-between relative overflow-hidden px-6 pb-6 pt-32 md:px-12 md:pb-12 md:pt-40">
+        <div className="w-full h-dvh bg-[#faf9f6] flex flex-col relative overflow-hidden">
 
             {/* ABSTRACT BACKGROUND */}
             <ThinkingParticles />
 
-            <div className="w-full max-w-5xl z-10">
-                {/* CONTENT AREA - FIXED HEIGHT TO PREVENT JUMPS */}
-                <div className="h-[55vh] md:h-[60vh] flex items-center justify-center mb-8">
-                    <AnimatePresence mode="wait">
-                        {activeTab === 'manifesto' && (
-                            <motion.div
-                                key="manifesto"
-                                variants={fade}
-                                initial="hidden"
-                                animate="show"
-                                exit="exit"
-                                className="w-full max-w-3xl flex flex-col gap-8 md:gap-12"
-                            >
-                                <span className={cn("text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
-                                    01 Manifiesto
-                                </span>
-                                <h2 className={cn("text-3xl md:text-5xl lg:text-7xl leading-[1.05] text-black font-normal", playfair.className)}>
-                                    Sistemas reales.<br />
-                                    <span className="opacity-50">Contextos reales.</span>
-                                </h2>
-                                <div className="flex flex-col gap-6 md:gap-8">
-                                    <p className="text-lg md:text-2xl text-black/60 font-light leading-relaxed max-w-xl">
-                                        Construir en producción exige criterio. No busco código perfecto, busco sistemas que sobrevivan al uso real.
-                                    </p>
-                                    <button
-                                        onClick={() => setActiveTab('systems')}
-                                        className={cn(
-                                            "text-lg md:text-xl text-black italic text-left hover:underline decoration-1 underline-offset-4 transition-all w-fit mt-4",
-                                            playfair.className
-                                        )}
-                                    >
-                                        Explorar mis sistemas &rarr;
-                                    </button>
-                                </div>
-                            </motion.div>
-                        )}
-
-                        {activeTab === 'systems' && (
-                            <motion.div
-                                key="systems"
-                                variants={fade}
-                                initial="hidden"
-                                animate="show"
-                                exit="exit"
-                                className="w-full"
-                            >
-                                <div className="flex justify-between items-baseline mb-8 md:mb-12">
-                                    <span className={cn("text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
-                                        02 Qué construyo
-                                    </span>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-8">
-                                    {systemTypes.map((type, idx) => (
-                                        <div key={idx} className="flex flex-col gap-2">
-                                            <h3 className={cn("text-xl md:text-3xl text-black font-normal", playfair.className)}>
-                                                {type.title}
-                                            </h3>
-                                            <p className="text-sm md:text-base text-black/50 leading-relaxed font-normal">
-                                                {type.description}
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
+            {/* --- TOP NAVIGATION (HORIZONTAL) --- */}
+            <div className="w-full z-20 pt-24 px-6 md:px-12 lg:px-24">
+                <nav className="w-full border-b border-black/10 pb-4 md:pb-6 overflow-x-auto no-scrollbar mask-gradient-right">
+                    <ul className="flex items-center gap-8 md:gap-12 lg:gap-16 min-w-max">
+                        {chapters.map((chapter) => (
+                            <li key={chapter.id}>
                                 <button
-                                    onClick={() => setActiveTab('principles')}
+                                    onClick={() => setActiveChapterId(chapter.id)}
                                     className={cn(
-                                        "text-lg md:text-xl text-black italic text-left hover:underline decoration-1 underline-offset-4 transition-all w-fit",
-                                        playfair.className
+                                        "text-xs md:text-sm tracking-[0.2em] font-medium transition-all duration-300 relative py-2 uppercase",
+                                        activeChapterId === chapter.id
+                                            ? "text-black opacity-100"
+                                            : "text-black/30 hover:text-black/60 hover:opacity-100"
                                     )}
+                                    style={{ fontFamily: 'var(--font-inter)' }} // Using Inter for UI
                                 >
-                                    Ver principios &rarr;
-                                </button>
-                            </motion.div>
-                        )}
-
-                        {activeTab === 'principles' && (
-                            <motion.div
-                                key="principles"
-                                variants={fade}
-                                initial="hidden"
-                                animate="show"
-                                exit="exit"
-                                className="w-full max-w-4xl"
-                            >
-                                <span className={cn("block mb-8 md:mb-12 text-xs tracking-[0.25em] uppercase text-black/40 font-bold", spaceMono.className)}>
-                                    03 Cómo pienso
-                                </span>
-                                <div className="flex flex-col gap-10 md:gap-12 mb-12">
-                                    {principles.map((p, idx) => (
-                                        <div key={idx} className="flex items-baseline gap-8 border-b border-black/10 pb-8 last:border-0 pl-0">
-                                            <span className="text-sm md:text-base text-black/40 font-mono font-bold">0{idx + 1}</span>
-                                            <h3 className={cn("text-2xl md:text-4xl text-black/90 font-normal leading-tight", playfair.className)}>
-                                                {p}
-                                            </h3>
-                                        </div>
-                                    ))}
-                                </div>
-                                <button
-                                    onClick={() => setActiveTab('manifesto')}
-                                    className={cn(
-                                        "text-sm md:text-base text-black/40 italic text-left hover:text-black transition-all w-fit",
-                                        playfair.className
+                                    {chapter.label}
+                                    {activeChapterId === chapter.id && (
+                                        <motion.div
+                                            layoutId="activeChapterLine"
+                                            className="absolute bottom-0 left-0 w-full h-[1px] bg-black"
+                                            transition={{ duration: 0.3 }}
+                                        />
                                     )}
-                                >
-                                    Volver al inicio ↺
                                 </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-
-                {/* TAB NAVIGATION (Fixed Position) */}
-                <div className="w-full flex justify-start border-t border-black/5 pt-4">
-                    <div className="flex items-center gap-8 md:gap-16">
-                        {[
-                            { id: 'manifesto', label: 'Manifiesto' },
-                            { id: 'systems', label: 'Sistemas' },
-                            { id: 'principles', label: 'Principios' }
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id as Tab)}
-                                className={cn(
-                                    "text-xs md:text-sm tracking-widest uppercase transition-all duration-300 relative py-2",
-                                    spaceMono.className,
-                                    activeTab === tab.id ? "text-black font-bold" : "text-black/30 hover:text-black/60"
-                                )}
-                            >
-                                {tab.label}
-                                {activeTab === tab.id && (
-                                    <motion.div
-                                        layoutId="activeTabIndicator"
-                                        className="absolute bottom-0 left-0 w-full h-px bg-black"
-                                    />
-                                )}
-                            </button>
+                            </li>
                         ))}
-                    </div>
-                </div>
+                    </ul>
+                </nav>
+            </div>
+
+            {/* --- MAIN CONTENT AREA --- */}
+            <div className="flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-24 z-10 w-full max-w-7xl mx-auto">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeChapter.id}
+                        initial={{ opacity: 0, y: 10 }} // Removed blur, kept subtle slide
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.35, ease: "easeOut" }} // Faster, snappier
+                        className="flex flex-col gap-8 md:gap-12"
+                    >
+                        {/* Title */}
+                        <h2 className={cn(
+                            "text-4xl md:text-5xl lg:text-7xl leading-[1.1] text-black font-normal tracking-tight max-w-4xl",
+                            playfair.className
+                        )}>
+                            {activeChapter.title}
+                        </h2>
+
+                        {/* Body Text */}
+                        <div className="w-12 h-[1px] bg-black/20 my-2" /> {/* Separator Line */}
+
+                        <div className="flex flex-col gap-8 items-start">
+                            <p className={cn(
+                                "text-lg md:text-xl lg:text-2xl text-black/60 font-light leading-relaxed max-w-2xl",
+                                inter.className // Using Inter for readability
+                            )}>
+                                {activeChapter.body}
+                            </p>
+
+                            {/* NEXT BUTTON */}
+                            <button
+                                onClick={handleNext}
+                                className={cn(
+                                    "flex items-center gap-2 text-sm md:text-base tracking-widest uppercase text-black/40 hover:text-black transition-colors mt-4 group",
+                                    spaceMono.className
+                                )}
+                            >
+                                <span>Siguiente</span>
+                                <span className="text-lg transition-transform group-hover:translate-x-1">→</span>
+                            </button>
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+
+            {/* --- FOOTER / PAGINATION INDICATOR (OPTIONAL) --- */}
+            <div className="w-full px-6 md:px-12 lg:px-24 pb-12 z-10 flex justify-between items-end opacity-20 hover:opacity-100 transition-opacity duration-500">
+                <span className={cn("text-xs font-mono uppercase tracking-widest", spaceMono.className)}>
+                    Thinking Framework
+                </span>
+                <span className={cn("text-xs font-mono uppercase tracking-widest", spaceMono.className)}>
+                    {String(chapters.findIndex(c => c.id === activeChapterId) + 1).padStart(2, '0')} / {String(chapters.length).padStart(2, '0')}
+                </span>
             </div>
 
         </div>
