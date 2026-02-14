@@ -30,37 +30,43 @@ const chapters = [
         id: "systems",
         label: "SISTEMAS",
         title: "Arquitectura es negocio.",
-        body: "La escalabilidad es una decisión arquitectónica, no un parche. Diseño sistemas donde la complejidad está encapsulada, no expuesta. La estabilidad es la base del crecimiento."
+        body: "La escalabilidad es una decisión arquitectónica, no un parche. Sistemas donde la complejidad está encapsulada, no expuesta. La estabilidad es la base del crecimiento."
     },
     {
         id: "decision",
         label: "DECISIÓN",
-        title: "Deuda técnica como instrumento financiero.",
-        body: "El código es un pasivo, no un activo. Cada línea que escribimos tiene un coste de mantenimiento. Priorizo la claridad y la capacidad de eliminación sobre la astucia. Pagamos intereses por la complejidad."
+        title: "Decidir es eliminar ruido.",
+        body: "La mayoría de decisiones no generan impacto — lo diluyen. El valor está en identificar las pocas que realmente mueven la aguja y ejecutarlas con claridad. Menos decisiones, mejor dirección."
     },
     {
         id: "ux",
         label: "UX",
-        title: "Claridad estructural.",
-        body: "La fricción es un fallo de empatía. La interfaz no son solo píxeles; es la lógica del negocio hecha visible. La claridad es la única métrica que importa."
+        title: "Reducir el desgaste cognitivo.",
+        body: "Cada interacción innecesaria es fricción acumulada. La interfaz es la lógica del negocio hecha visible — cuando funciona, desaparece. Un sistema bien diseñado no se explica, se entiende."
     },
     {
         id: "ia",
         label: "IA",
         title: "Inteligencia como utilidad.",
-        body: "No es magia, es apalancamiento. Integro IA donde reduce la carga cognitiva o acelera flujos de trabajo verificados. Implementación práctica sobre el hype."
+        body: "No es magia, es apalancamiento. La IA se integra donde reduce la carga cognitiva o acelera flujos de trabajo verificados. Implementación práctica sobre el hype."
     },
     {
         id: "teams",
         label: "EQUIPOS",
         title: "Cultura es el sistema operativo.",
-        body: "La autonomía requiere límites claros. Construyo entornos donde la documentación es un reflejo y la toma de decisiones está distribuida, no embotellada."
+        body: "La autonomía requiere límites claros. Entornos donde la documentación es un reflejo y la toma de decisiones está distribuida, no embotellada."
+    },
+    {
+        id: "responsibility",
+        label: "RESPONSABILIDAD",
+        title: "La capacidad de responder.",
+        body: "Responsabilidad no es obligación — es la habilidad de responder cuando la presión aparece. Asumir el peso de las decisiones difíciles sin delegar la incomodidad. La presión no se evita, se sostiene."
     },
     {
         id: "capital",
         label: "CAPITAL",
         title: "Eficiencia de recursos.",
-        body: "Estamos construyendo activos. Cada ciclo de desarrollo debe incrementar incrementalmente la valoración del producto, no solo su conteo de funcionalidades."
+        body: "Se construyen activos. Cada ciclo de desarrollo debe incrementar la valoración del producto, no solo su conteo de funcionalidades."
     }
 ];
 
