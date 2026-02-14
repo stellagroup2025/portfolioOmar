@@ -171,7 +171,7 @@ export function ThinkingParticles() {
             className="absolute inset-0 z-0 pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.5 }}
+            transition={{ duration: 0.5 }}
         />
     );
 }
