@@ -68,10 +68,7 @@ export default function Portfolio() {
     home: <Home onOpenMenu={() => { setMenuSource('hero_cta'); setIsMenuOpen(true); }} onNavigate={handleSectionChange} isInitialLoad={isInitialLoad} />,
     approach: <Approach />,
     work: (
-      <Work
-        activeProject={activeProject}
-        setActiveProject={handleProjectChange}
-      />
+      <Work />
     ),
     about: <About />,
     contact: <Contact />,
@@ -128,30 +125,34 @@ export default function Portfolio() {
           {/* Section Indicator (Right) */}
           <div className="flex items-center">
             <AnimatePresence mode="wait">
-              <motion.button
-                key={activeSection}
-                initial={isInitialLoad ? { opacity: 0 } : { opacity: 0, y: -10 }} // Phase 6: Nav Reveal (0 opacity initially)
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={
-                  isInitialLoad && activeSection === 'home'
-                    ? { delay: 6.5, duration: 1.0, ease: "easeOut" } // Phase 6: Late reveal for Home (6.5s delay)
-                    : { delay: 0.7, duration: 0.4, ease: "easeOut" } // Wait for page transition to finish
-                }
-                onClick={() => setIsMenuOpen(true)}
-                className={cn(
-                  "text-sm md:text-xl font-bold tracking-widest text-black/40 hover:text-black uppercase block cursor-pointer transition-colors relative z-50 pointer-events-auto", // Added z-50 pointer-events-auto
-                  spaceMono.className
-                )}
-              >
-                {activeSection === 'home' ? '' : (
-                  activeSection === 'approach' ? 'THINKING' :
+              {activeSection !== 'home' && (
+                <motion.button
+                  key={activeSection}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    transition: { delay: 0.7, duration: 0.4, ease: "easeOut" }
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: 10,
+                    transition: { duration: 0.2, ease: "easeIn" }
+                  }}
+                  onClick={() => setIsMenuOpen(true)}
+                  className={cn(
+                    "text-sm md:text-xl font-bold tracking-widest text-black/40 hover:text-black uppercase block cursor-pointer transition-colors relative z-50 pointer-events-auto",
+                    spaceMono.className
+                  )}
+                >
+                  {activeSection === 'approach' ? 'THINKING' :
                     activeSection === 'work' ? 'WORK' :
                       activeSection === 'about' ? 'ABOUT' :
                         activeSection === 'contact' ? 'CONTACT' :
                           activeSection.toUpperCase()
-                )}
-              </motion.button>
+                  }
+                </motion.button>
+              )}
             </AnimatePresence>
           </div>
         </div>

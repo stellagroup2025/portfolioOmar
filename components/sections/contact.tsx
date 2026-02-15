@@ -118,7 +118,7 @@ export function Contact() {
                   "group-hover:opacity-100", // We need a parent group wrapper
                   spaceMono.className
                 )}>
-                  Copiar (Clic dcho.)
+                  {isMobile ? "Copiar" : "Clic · Copiar (Clic dcho.)"}
                 </span>
               )}
             </div>
