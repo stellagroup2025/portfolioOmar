@@ -51,7 +51,7 @@ export function Work() {
       </div>
 
       {/* --- MAIN CONTENT AREA --- */}
-      <div className="flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24 overflow-y-auto no-scrollbar pb-24 pt-8 md:pt-12 z-10">
+      <div className="flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24 overflow-y-auto elegant-scrollbar pb-24 pt-8 md:pt-12 z-10">
         <AnimatePresence mode="wait">
 
           {/* TAB: BUILDING (QRONNECT) */}

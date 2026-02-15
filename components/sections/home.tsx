@@ -67,12 +67,13 @@ export function Home({ onOpenMenu, onNavigate, isInitialLoad = false }: HomeProp
   const [startParticles, setStartParticles] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
 
-  // Phase 4: Trigger particles after headline reading time (approx 5.5s with slower typing)
+  // Phase 4: Trigger particles early so they're rising by the time the growth arrow appears (~9.8s)
+  // Particles need ~2.5s to transition through chaos → forming → growth (upward)
   useEffect(() => {
     if (isInitialLoad) {
       const timer = setTimeout(() => {
         setStartParticles(true);
-      }, 5500); // Delayed to wait for slower typing
+      }, 7000); // Start early so upward motion syncs with arrow at 9.8s
 
       // Phase 7: Welcome Message (10.5s -> 14.5s)
       const timerWelcomeShow = setTimeout(() => setShowWelcome(true), 10500);

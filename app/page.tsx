@@ -136,7 +136,7 @@ export default function Portfolio() {
                 transition={
                   isInitialLoad && activeSection === 'home'
                     ? { delay: 6.5, duration: 1.0, ease: "easeOut" } // Phase 6: Late reveal for Home (6.5s delay)
-                    : { duration: 0.2 } // Standard transition for navigation
+                    : { delay: 0.7, duration: 0.4, ease: "easeOut" } // Wait for page transition to finish
                 }
                 onClick={() => setIsMenuOpen(true)}
                 className={cn(
