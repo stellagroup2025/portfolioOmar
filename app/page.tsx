@@ -107,8 +107,16 @@ export default function Portfolio() {
               {activeSection !== "home" && (
                 <motion.button
                   initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                    transition: { delay: 0.7, duration: 0.4, ease: "easeOut" }
+                  }}
+                  exit={{
+                    opacity: 0,
+                    x: -10,
+                    transition: { duration: 0.2, ease: "easeIn" }
+                  }}
                   onClick={() => handleSectionChange("home")}
                   className={cn(
                     "flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-black/40 hover:text-black transition-colors ml-4", // Added margin-left
