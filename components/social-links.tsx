@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Linkedin, Instagram, Github } from "lucide-react"
+import { Linkedin, Instagram } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 
 export function SocialLinks() {
@@ -10,7 +10,6 @@ export function SocialLinks() {
   const socialLinks = [
     { icon: <Linkedin size={isMobile ? 16 : 14} />, href: "https://www.linkedin.com/in/omar-somoza-230b71228/", label: "LinkedIn" },
     { icon: <Instagram size={isMobile ? 16 : 14} />, href: "https://www.instagram.com/omarsomoza1/", label: "Instagram" },
-    { icon: <Github size={isMobile ? 16 : 14} />, href: "https://github.com/omarsomoza", label: "GitHub" },
   ]
 
   const container = {
